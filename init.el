@@ -179,7 +179,7 @@
   ""
   (if (symbolp (projectile-project-root))
 	  (error "Not in project")
-	  (compile (concat "make -f .makefile -C " (projectile-project-root) " " TARGET))
+	  (compile (concat "make -f .makefile -C " (projectile-project-root) " " TARGET) t)
 	))
 
 (global-set-key (kbd "<f5>") (lambda () (interactive) (run_make "build_and_run")))
