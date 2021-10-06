@@ -1,8 +1,9 @@
 neofetch
+echo ""
 
 source ~/git/znap/zsh-snap/znap.zsh
 
-znap source powerlevel10k
+# znap source powerlevel10k
 znap source marlonrichert/zsh-autocomplete
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -60,3 +61,4 @@ alias vim='nvim'
 
 [ -f "/home/yuchan/.ghcup/env" ] && source "/home/yuchan/.ghcup/env" # ghcup-env
 
+ZSH_THEME="agnoster"

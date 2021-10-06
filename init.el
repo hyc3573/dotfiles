@@ -36,7 +36,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package)))
+   '(org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+ '(vterm-use-vterm-prompt-detection-method t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -205,7 +206,7 @@
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))
 	  dashboard-projects-backend 'projectile
 	  dashboard-startup-banner 'logo
-	  dashboard-items '((recents . 5)
+	  dashboard-items '((recents . 10)
 						(projects . 5)
 						(agenda . 5))
 	  dashboard-set-heading-icons t
@@ -214,6 +215,21 @@
 
 (setq vc-follow-symlinks nil)
 
+(setq make-backup-files nil)
 
+(require 'vterm)
+(add-hook 'vterm-mode-hook #'redraw-display)
+
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/Roam")
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+		 ("C-c n f" . org-roam-node-find)
+		 ("C-c n i" . org-roam-node-insert))
+  :config
+  (org-roam-setup))
 
 (setq gc-cons-threshold (* 2 1000 1000))
