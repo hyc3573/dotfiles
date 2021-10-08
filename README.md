@@ -1,8 +1,3 @@
-
-# Table of Contents
-
-
-
 -   설치
     1.  의존성
         1.  bash
