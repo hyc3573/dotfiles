@@ -1,0 +1,1 @@
+/home/yuchan/.config/fish/config.fish
