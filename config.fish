@@ -22,11 +22,17 @@ distributions are really distributions of GNU/Linux."
 
 fish_add_path PATH $HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 fish_add_path $HOME/.cabal/bin /home/yuchan/.ghcup/bin
+fish_add_path $HOME/.ghcup/ghc/8.10.7/bin
 fish_add_path PATH /home/yuchan/.local/bin
 
 set fish_greeting
 
 if status is-interactive
-   neofetch
-   sleep 0.3
+	if test $TERM = 'xterm' || test $TERM = 'st-256color'
+		neofetch
+	else
+		neofetch --chafa
+	end
+		
+	sleep 0.3
 end

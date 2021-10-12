@@ -235,8 +235,8 @@ let g:dashboard_custom_header = [
 let g:minimap_width = 15
 let g:minimap_auto_start = 1
 
-autocmd TabNew,VimEnter * execute "normal :NERDTreeClose\<CR>"
-autocmd TabNew,VimEnter * execute "normal :NERDTree\<CR>\<C-w>l"
+"autocmd TabNew,VimEnter * execute "normal :NERDTreeClose\<CR>"
+"autocmd TabNew,VimEnter * execute "normal :NERDTree\<CR>\<C-w>l"
 "autocmd TabNew,VimEnter * execute "normal :term ++rows=10\<CR>\<C-w>k"
 
 noremap <silent> <leader>h :noh<CR>
