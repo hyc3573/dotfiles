@@ -12,7 +12,7 @@
 (setq confirm-kill-emacs nil)
 
 (setenv "PATH" (concat (getenv "PATH") ":/home/yuchan/.cabal/bin:/home/yuchan/.ghcup/bin"))
-(setq exec-path (append exec-path '("/home/yuchan/.cabal/bin" "/home/yuchan/.ghcup/bin")))
+(setq exec-path (append exec-path '("/home/yuchan/.cabal/bin" "/home/yuchan/.ghcup/bin" "/home/yuchan/.local/bin")))
 
 (require 'package)
 
@@ -37,8 +37,10 @@
  ;; If there is more than one, they won't work right.
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
- '(vterm-use-vterm-prompt-detection-method t))
+   '(arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+ '(posframe-mouse-banish nil)
+ '(vterm-use-vterm-prompt-detection-method t)
+ '(xterm-mouse-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -70,12 +72,12 @@
   (setq lsp-enable-snpippet nil
 		lsp-signature-function 'lsp-signature-posframe)
   :hook
-  (c++-mode . lsp)
+  ((c++-mode . lsp)
   (c-mode . lsp)
-  (python-mode .lsp)
+  (python-mode . lsp)
   (haskell-mode . lsp)
   (haskell-literate-mode . lsp)
-  (lsp-mode . lsp-enable-which-key-integration)
+  (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (require 'lsp-haskell)
 
@@ -137,6 +139,28 @@
   (c-mode . smartparens-mode))
 (require 'smartparens-config)
 
+(use-package centaur-tabs
+  :demand
+  :config
+  (centaur-tabs-headline-match)
+  (centaur-tabs-mode t)
+  :custom
+  ;;(centaur-tabs-style "bar")
+  (centaur-tabs-height 32)
+  (centaur-tabs-set-icons t)
+  (centaur-tabs-plain-icons t)
+  (centaur-tabs-set-bar 'under)
+  (x-underline-at-descent-line t)
+  (centaur-tabs-set-modified-marker t)
+  (centaur-tabs-modified-marker "~")
+  :hook
+  (dired-mode . centaur-tabs-local-mode)
+  (dashboard-mode . centaur-tabs-local-mode)
+  (helpful-mode . centaur-tabs-local-mode)
+  :bind
+  ("<C-S-iso-lefttab>" . centaur-tabs-backward)
+  ("C-<tab>" . centaur-tabs-forward))
+
 ;; (require 'smartparens)
 ;; (require 'smartparens-config)
 ;; (add-hook 'c++-mode-hook #'smartparens-mode)
@@ -159,6 +183,18 @@
 
 (global-set-key (kbd "M-p") 'ace-window)
 
+(setq-default prettify-symbols-alist '(("#+BEGIN_SRC" . "†")
+                                       ("#+END_SRC" . "†")
+                                       ("#+begin_src" . "†")
+                                       ("#+end_src" . "†")
+                                       (">=" . "≥")
+                                       ("=>" . "⇨")))
+(setq prettify-symbols-unprettify-at-point 'right-edge)
+(add-hook 'org-mode-hook 'prettify-symbols-mode)
+
+(require 'org-bullets)
+(add-hook 'org-mode-hook 'org-bullets-mode)
+
 (require 'org)
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -178,8 +214,18 @@
 						 "~/tasks.org"))
 (global-set-key (kbd "C-c a") 'org-agenda)
 (setq org-src-tab-acts-natively t)
-(setq org-src-preserve-indentation t
+(setq org-startup-indented t
 	  org-tag-alist '(("@학교" . ?s) ("@집" . ?f) ("@취미" . ?h) ("@컴퓨터" . ?c) ("@루틴" . ?r)))
+
+(add-hook 'org-mode-hook
+		  (lambda ()
+			(variable-pitch-mode)
+			visual-line-mode))
+
+(setq org-hide-emphasis-markers t
+      org-fontify-done-headline t
+      org-hide-leading-stars t
+      org-pretty-entities t)
 
 (setq which-key-show-early-on-C-h t
 	  which-key-idle-delay 0

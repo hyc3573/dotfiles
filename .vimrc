@@ -32,7 +32,7 @@ set wildmenu
 set clipboard=unnamedplus
 set undodir=$HOME/.vim/undodir
 set undofile
-set termguicolors
+
 
 let g:C_Ctrl_j = 'off'
 

@@ -28,11 +28,10 @@ fish_add_path PATH /home/yuchan/.local/bin
 set fish_greeting
 
 if status is-interactive
+	sleep 0.1
 	if test $TERM = 'xterm' || test $TERM = 'st-256color'
 		neofetch
 	else
-		neofetch --chafa
+		neofetch --ascii
 	end
-		
-	sleep 0.3
 end

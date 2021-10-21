@@ -1,16 +1,9 @@
 neofetch --ascii
 sleep 0.1
 
-source ~/git/znap/zsh-snap/znap.zsh
+source ~/Git/znap/zsh-snap/znap.zsh
 
-znap source powerlevel10k
 znap source marlonrichert/zsh-autocomplete
-
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" > /dev/null
-fi
-
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
