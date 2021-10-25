@@ -1,13 +1,21 @@
 (setq gc-cons-threshold (* 50 1000 1000))
 
 ;;(package-initialize)
-(setq inhibit-startup-message t)
+(setq inhibit-startup-message t
+	  backup-by-copying t
+	  backup-directory-alist '(("." . "~/.local/var/emacs/backup"))
+	  delete-old-versions t
+	  kept-new-versions 6
+	  kept-old-versions 2
+	  version-control t)
+
 (set-face-attribute 'default nil :font "MesloLGS NF" :height 130)
 (load-theme 'nord t)
 
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+(setq frame-resize-pixelwise t)
 
 (setq confirm-kill-emacs nil)
 
@@ -37,7 +45,7 @@
  ;; If there is more than one, they won't work right.
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil)
  '(vterm-use-vterm-prompt-detection-method t)
  '(xterm-mouse-mode t))
@@ -50,7 +58,10 @@
 
 (use-package undo-tree
   :config
-  (global-undo-tree-mode))
+  (global-undo-tree-mode)
+  (setq undo-tree-auto-save-history t
+		undo-tree-history-directory-alist
+		(quote (("" . "~/.local/var/emacs/undo_hist")))))
 
 (use-package evil
   :init
@@ -183,12 +194,12 @@
 
 (global-set-key (kbd "M-p") 'ace-window)
 
-(setq-default prettify-symbols-alist '(("#+BEGIN_SRC" . "†")
-                                       ("#+END_SRC" . "†")
-                                       ("#+begin_src" . "†")
-                                       ("#+end_src" . "†")
-                                       (">=" . "≥")
-                                       ("=>" . "⇨")))
+;; (setq-default prettify-symbols-alist '(("#+BEGIN_SRC" . "†")
+;;                                        ("#+END_SRC" . "†")
+;;                                        ("#+begin_src" . "†")
+;;                                        ("#+end_src" . "†")
+;;                                        (">=" . "≥")
+;;                                        ("=>" . "⇨")))
 (setq prettify-symbols-unprettify-at-point 'right-edge)
 (add-hook 'org-mode-hook 'prettify-symbols-mode)
 
@@ -206,21 +217,21 @@
    (calc . t)
    (haskell . t)
    ))
-(setq org-src-fontify-natively t)
+;; (setq org-src-fontify-natively t)
 (setq org-confirm-babel-evaluate nil)
 (setq org-startup-with-inline-images t)
 (setq org-log-dont t)
 (setq org-agenda-files '("~/notes.org"
 						 "~/tasks.org"))
 (global-set-key (kbd "C-c a") 'org-agenda)
-(setq org-src-tab-acts-natively t)
+;; (setq org-src-tab-acts-natively t)
 (setq org-startup-indented t
 	  org-tag-alist '(("@학교" . ?s) ("@집" . ?f) ("@취미" . ?h) ("@컴퓨터" . ?c) ("@루틴" . ?r)))
 
-(add-hook 'org-mode-hook
-		  (lambda ()
-			(variable-pitch-mode)
-			visual-line-mode))
+;; (add-hook 'org-mode-hook
+;; 		  (lambda ()
+;; 			(variable-pitch-mode)
+;; 			visual-line-mode))
 
 (setq org-hide-emphasis-markers t
       org-fontify-done-headline t
@@ -264,7 +275,7 @@
 (when (eq system-type 'gnu/linux)
   (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding")))
 
-(add-hook 'prog-mode-hook 'show-paren-mode)
+(add-hook 'prog-mode-hook 'show-smartparens-mode)
 
 (defun run_make (TARGET)
   ""
@@ -302,13 +313,11 @@
 				   (agenda . 5))
  dashboard-set-heading-icons t
  dashboard-set-file-icons t
- dashboard-banner-logo-title "Emacs Rules:)"
+ dashboard-banner-logo-title "Friendship ended with VIM. Now Emacs is my best friend."
  dashboard-filter-agenda-entry 'dashboard-filter-agenda-by-todo
  dashboard-week-agenda nil)
 
 (setq vc-follow-symlinks nil)
-
-(setq make-backup-files nil)
 
 (require 'vterm)
 (add-hook 'vterm-mode-hook #'redraw-display)
