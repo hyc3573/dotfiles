@@ -1,5 +1,13 @@
 (setq gc-cons-threshold (* 50 1000 1000))
 
+(setq native-comp-async-report-warnings-errors nil)
+
+(setq tab-width 4
+	 indent-tabs-mode t
+	 highlight-indent-guides-method 'characte)
+
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+
 ;;(package-initialize)
 (setq inhibit-startup-message t
 	  backup-by-copying t
@@ -45,7 +53,7 @@
  ;; If there is more than one, they won't work right.
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(smart-tabs-mode i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil)
  '(vterm-use-vterm-prompt-detection-method t)
  '(xterm-mouse-mode t))
@@ -247,7 +255,7 @@
 
 (setq default-input-method "korean-hangul")
 ;; (set-language-enviroment "Korean")
-(global-set-key (kbd "S-SPC") nil)
+;; (global-set-key (kbd "S-SPC") nil)
 (global-set-key (kbd "<Hangul>") 'toggle-input-method)
 
 (require 'all-the-icons)
@@ -313,14 +321,16 @@
 				   (agenda . 5))
  dashboard-set-heading-icons t
  dashboard-set-file-icons t
- dashboard-banner-logo-title "Friendship ended with VIM. Now Emacs is my best friend."
+ dashboard-banner-logo-title "삼다수통제조사"
  dashboard-filter-agenda-entry 'dashboard-filter-agenda-by-todo
  dashboard-week-agenda nil)
+(add-hook 'dashboard-mode-hook
+		  (lambda ()
+			(variable-pitch-mode)))
 
 (setq vc-follow-symlinks nil)
 
 (require 'vterm)
-(add-hook 'vterm-mode-hook #'redraw-display)
 
 (use-package org-roam
   :ensure t
@@ -333,5 +343,11 @@
 		 ("C-c n i" . org-roam-node-insert))
   :config
   (org-roam-setup))
+
+(good-scroll-mode 1)
+
+(setq compilation-scroll-output t)
+
+(global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
 
 (setq gc-cons-threshold (* 2 1000 1000))
