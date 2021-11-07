@@ -33,6 +33,10 @@ set clipboard=unnamedplus
 set undodir=$HOME/.vim/undodir
 set undofile
 
+if (has("termguicolors"))
+	set termguicolors
+endif
+
 
 let g:C_Ctrl_j = 'off'
 
@@ -84,6 +88,7 @@ Plugin 'ahmedkhalf/project.nvim'
 Plugin 'glepnir/dashboard-nvim'
 Plugin 'nvim-telescope/telescope.nvim'
 Plugin 'nvim-lua/plenary.nvim'
+Plugin 'arcticicestudio/nord-vim'
 
 call vundle#end()
 
@@ -189,8 +194,8 @@ nnoremap <silent> <leader>r :AsyncTask build_and_run<cr>
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 
-let g:airline_theme = 'base16_dracula'
-colorscheme darcula
+let g:airline_theme = 'nord'
+colorscheme nord
 
 let g:ale_sign_error = ''
 let g:ale_sign_warning = ''
