@@ -7,7 +7,8 @@
 
 alias ls='ls --color=auto'
 alias vim='nvim'
-alias emacs='emacs -nw'
+alias emacs='XMODIFIERS="" emacs'
+alias enw='emacs -nw'
 
 PS1='[\u@\h \W]\$ '
 alias rm='rm -i'
