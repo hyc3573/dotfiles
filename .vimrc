@@ -298,6 +298,8 @@ nnoremap <silent> <Leader>ev :e ~/.vimrc<CR>
 nnoremap <silent> <Leader>p :Telescope projects<CR>
 nnoremap <silent> <Leader>ec :e ~/projects/20.cpp<CR>
 
+nnoremap <silent> <F8> :make -f .makefile build_and_make
+
 let g:cpp_class_scope_highlight = 1
 let g:cpp_member_variable_highlight = 1
 let g:cpp_class_decl_highlight = 1
