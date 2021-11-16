@@ -1,40 +1,21 @@
+;;  /$$$$$$           /$$   /$$                  /$$
+;; |_  $$_/          |__/  | $$                 | $$
+;;   | $$   /$$$$$$$  /$$ /$$$$$$       /$$$$$$ | $$
+;;   | $$  | $$__  $$| $$|_  $$_/      /$$__  $$| $$
+;;   | $$  | $$  \ $$| $$  | $$       | $$$$$$$$| $$
+;;   | $$  | $$  | $$| $$  | $$ /$$   | $$_____/| $$
+;;  /$$$$$$| $$  | $$| $$  |  $$$$//$$|  $$$$$$$| $$
+;; |______/|__/  |__/|__/   \___/ |__/ \_______/|__/
+
+
+;; Init
 (setq gc-cons-threshold (* 50 1000 1000))
-
-(setq native-comp-async-report-warnings-errors nil)
-
-(setq tab-width 4
-	 indent-tabs-mode t
-	 highlight-indent-guides-method 'characte)
-
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-
-;;(package-initialize)
-(setq inhibit-startup-message t
-	  backup-by-copying t
-	  backup-directory-alist '(("." . "~/.local/var/emacs/backup"))
-	  delete-old-versions t
-	  kept-new-versions 6
-	  kept-old-versions 2
-	  version-control t)
-
-(set-face-attribute 'default nil :font "MesloLGS NF" :height 130)
-(load-theme 'nord t)
-
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(setq frame-resize-pixelwise t)
-
-(setq confirm-kill-emacs nil)
-
-(setenv "PATH" (concat (getenv "PATH") ":/home/yuchan/.cabal/bin:/home/yuchan/.ghcup/bin"))
-(setq exec-path (append exec-path '("/home/yuchan/.cabal/bin" "/home/yuchan/.ghcup/bin" "/home/yuchan/.local/bin")))
 
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-						 ("org" . "https://orgmode.org/elpa/")
-						 ("elpa" . "https://elpa.gnu.org/packages/")))
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -51,10 +32,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(global-display-line-numbers-mode t)
+ '(highlight-indent-guides-method 'fill)
+ '(menu-bar-mode nil)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(smart-tabs-mode i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
- '(posframe-mouse-banish nil)
+   '(projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+ '(posframe-mouse-banish nil t)
+ '(scroll-bar-mode nil)
+ '(tool-bar-mode nil)
  '(vterm-use-vterm-prompt-detection-method t)
  '(xterm-mouse-mode t))
 (custom-set-faces
@@ -64,290 +50,321 @@
  ;; If there is more than one, they won't work right.
  )
 
+
+;; themes
+(load-theme 'nord t)
+(set-face-attribute 'default nil
+					:font "MesloLGS NF"
+                    :height 130)
+(when (eq system-type 'gnu/linux)
+  (set-fontset-font t
+                    'hangul
+                    (font-spec :name "NanumGothicCoding")))
+
+
+;; configs
+(setq native-comp-async-report-warnings-errors nil
+	  tab-width 4
+	  indent-tabs-mode nil
+	  inhibit-startup-message t
+      backup-by-copying t
+      backup-directory-alist '(("." . "~/.local/var/emacs/backup"))
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t
+	  compilation-scroll-output t
+	  c-default-style "bsd"
+	  default-input-method "korean-hangul"
+	  prettify-symbols-unprettify-at-point 'right-edge
+	  org-agenda-custom-commands '(("c" "Weekly/Daily"
+                                    ((agenda ""
+                                             ((org-agenda-span 1)
+                                              (org-agenda-start-on-weekday 0)))
+                                     (agenda "")
+                                     (alltodo ""))))
+	  vc-follow-symlinks nil
+	  frame-resize-pixelwise t
+	  confirm-kill-emacs nil)
+
+(setq-default tab-width 4)
+(defvaralias 'c-basic-offset 'tab-width)
+
+(setenv "PATH"
+        (concat (getenv "PATH")
+                ":/home/yuchan/.ghcup/ghc/8.10.7/bin:/home/yuchan/.cabal/bin:/home/yuchan/.ghcup/bin"))
+(setq exec-path (append exec-path
+                        '("/home/yuchan/.cabal/bin" "/home/yuchan/.ghcup/bin"
+                          "/home/yuchan/.local/bin"
+                          "/home/yuchan/.ghcup/ghc/8.10.7/bin")))
+
+
+;; Hooks
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+(add-hook 'emacs-lisp-mode 'highlight-indent-guides-mode)
+(add-hook 'org-mode-hook 'prettify-symbols-mode)
+(add-hook 'after-init-hook #'doom-modeline-mode)
+(add-hook 'prog-mode-hook 'show-smartparens-mode)
+
+
+;; Use-packages
 (use-package undo-tree
+  :ensure t
   :config
   (global-undo-tree-mode)
   (setq undo-tree-auto-save-history t
-		undo-tree-history-directory-alist
-		(quote (("" . "~/.local/var/emacs/undo_hist")))))
+        undo-tree-history-directory-alist (quote (("" . "~/.local/var/emacs/undo_hist")))))
 
 (use-package evil
+  :ensure t
   :init
-  (setq evil-want-keybinding nil
-		evil-want-integration t)
-  (setq evil-undo-system 'undo-tree)
+  (setq evil-want-keybinding nil evil-want-integration t
+		evil-undo-system 'undo-tree)
   :config
   (add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
   (evil-mode 1))
 
 (use-package evil-collection
-  :config
-  (evil-collection-init))
+  :ensure t
+  :config (evil-collection-init))
 
 (use-package lsp-mode
+  :ensure t
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
-  (setq lsp-enable-snpippet nil
-		lsp-signature-function 'lsp-signature-posframe)
+  (setq lsp-enable-snpippet nil lsp-signature-function
+        'lsp-signature-posframe)
   :hook
   ((c++-mode . lsp)
-  (c-mode . lsp)
-  (python-mode . lsp)
-  (haskell-mode . lsp)
-  (haskell-literate-mode . lsp)
-  (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
+   (c-mode . lsp)
+   (python-mode . lsp)
+   (haskell-mode . lsp)
+   (haskell-literate-mode . lsp)
+   (lsp-mode . lsp-enable-which-key-integration))
+  :commands
+  lsp)
 (require 'lsp-haskell)
 
-(use-package lsp-ui :commands lsp-ui-mode)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+(use-package lsp-treemacs
+  :ensure t
+  :commands lsp-treemacs-errors-list)
 
 (use-package company
+  :ensure t
+  :init
+  (setq lsp-enable-snpippet nil
+        company-lsp-enable-snippet nil)
   :config
   (setq company-minimum-prefix-length 1
-		company-idle-delay 0.0
-		company-lsp-enable-snippet nil
-		company-tooltop-align-annotations t
-		company-transformers '(company-sort-by-occurrence)
-		company-quickhelp-delay 0)
+        company-idle-delay 0
+        company-tooltip-idle-delay 1
+        company-require-match nil
+        company-tooltop-align-annotations t
+        company-transformers '(company-sort-by-occurrence)
+        company-quickhelp-delay 0
+        company-backends '(company-capf company-keywords)
+        company-show-quick-access t)
   (company-tng-configure-default)
   :hook
   (emacs-lisp-mode . company-mode)
+  (cmake-mode . company-mode)
   :bind
   (:map company-active-map ("TAB" . company-select-next-if-tooltip-visible-or-complete-selection))
   (:map company-active-map ("<backtab>" . company-select-previous))
   (:map company-active-map ("RET" . nil)))
 
-;; (require 'company)
-;; (setq company-minimum-prefix-length 1
-;;       company-idle-delay 0.0
-;;       company-lsp-enable-snippet nil
-;;       company-tooltop-align-annotations t
-;;       company-transformers '(company-sort-by-occurrence)
-;;       company-quickhelp-delay 0)
-
-;; (company-tng-configure-default)
-;; (add-hook 'emacs-lisp-mode-hook #'company-mode)
-
-;; (define-key company-active-map (kbd "TAB") 'company-select-next-if-tooltip-visible-or-complete-selection)
-;; (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
-;; (define-key company-active-map (kbd "RET") nil)
-
-;;(require 'lsp-mode)
-;;(require 'lsp-haskell)
-;;(add-hook 'c++-mode-hook #'lsp)
-;;(add-hook 'python-mode-hook #'lsp)
-;;(add-hook 'haskell-mode-hook #'lsp)
-;;(add-hook 'haskell-literate-mode-hook #'lsp)
-;;(with-eval-after-load 'lsp-mode
-;;  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
-
-(setq-default tab-width 4)
-(defvaralias 'c-basic-offset 'tab-width)
-
-;;(require 'rainbow-delimiters)
-;;(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-
 (use-package smartparens
+  :ensure t
   :hook
-  (c++-mode . smartparens-mode)
-  (python-mode . smartparens-mode)
-  (emacs-lisp-mode . smartparens-mode)
-  (haskell-mode . smartparens-mode)
-  (c-mode . smartparens-mode))
-(require 'smartparens-config)
+  ((c++-mode . smartparens-mode)
+   (python-mode . smartparens-mode)
+   (emacs-lisp-mode . smartparens-mode)
+   (haskell-mode . smartparens-mode)
+   (c-mode . smartparens-mode)
+   (org-mode . smartparens-mode))
+  :init
+  (require 'smartparens-config)
+)
 
 (use-package centaur-tabs
-  :demand
-  :config
+  :ensure t
+  :demand :config
   (centaur-tabs-headline-match)
   (centaur-tabs-mode t)
   :custom
-  ;;(centaur-tabs-style "bar")
-  (centaur-tabs-height 32)
-  (centaur-tabs-set-icons t)
-  (centaur-tabs-plain-icons t)
-  (centaur-tabs-set-bar 'under)
-  (x-underline-at-descent-line t)
-  (centaur-tabs-set-modified-marker t)
-  (centaur-tabs-modified-marker "~")
+  ((centaur-tabs-style "bar")
+   (centaur-tabs-height 32)
+   (centaur-tabs-set-icons t)
+   (centaur-tabs-plain-icons t)
+   (centaur-tabs-set-bar 'under)
+   (x-underline-at-descent-line t)
+   (centaur-tabs-set-modified-marker t)
+   (centaur-tabs-modified-marker "~"))
   :hook
   (dired-mode . centaur-tabs-local-mode)
   (dashboard-mode . centaur-tabs-local-mode)
   (helpful-mode . centaur-tabs-local-mode)
   :bind
-  ("<C-S-iso-lefttab>" . centaur-tabs-backward)
-  ("C-<tab>" . centaur-tabs-forward))
+  (("<C-S-iso-lefttab>" . centaur-tabs-backward)
+   ("C-<tab>" . centaur-tabs-forward)))
 
-;; (require 'smartparens)
-;; (require 'smartparens-config)
-;; (add-hook 'c++-mode-hook #'smartparens-mode)
-;; (add-hook 'python-mode-hook #'smartparens-mode)
-;; (add-hook 'emacs-lisp-mode-hook #'smartparens-mode)
-;; (add-hook 'haskell-mode-hook #'smartparens-mode)
-
-(setq c-default-style "bsd")
-
-(global-display-line-numbers-mode)
-
-(setq helm-make-comint t
-	  helm-make-projectile t
-	  helm-make-fuzzy-matching t)
-(require 'helm-make)
-(global-set-key (kbd "C-c m") 'helm-make-projectile)
-
-(when (fboundp 'windmove-default-keybindings)
-  (windmove-default-keybindings))
-
-(global-set-key (kbd "M-p") 'ace-window)
-
-;; (setq-default prettify-symbols-alist '(("#+BEGIN_SRC" . "†")
-;;                                        ("#+END_SRC" . "†")
-;;                                        ("#+begin_src" . "†")
-;;                                        ("#+end_src" . "†")
-;;                                        (">=" . "≥")
-;;                                        ("=>" . "⇨")))
-(setq prettify-symbols-unprettify-at-point 'right-edge)
-(add-hook 'org-mode-hook 'prettify-symbols-mode)
-
-(require 'org-bullets)
-(add-hook 'org-mode-hook 'org-bullets-mode)
-
-(require 'org)
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '(
-   (python . t)
-   (C . t)
-   (shell . t)
-   (emacs-lisp . t)
-   (calc . t)
-   (haskell . t)
-   ))
-;; (setq org-src-fontify-natively t)
-(setq org-confirm-babel-evaluate nil)
-(setq org-startup-with-inline-images t)
-(setq org-log-dont t)
-(setq org-agenda-files '("~/notes.org"
-						 "~/tasks.org"))
-(global-set-key (kbd "C-c a") 'org-agenda)
-;; (setq org-src-tab-acts-natively t)
-(setq org-startup-indented t
-	  org-tag-alist '(("@학교" . ?s) ("@집" . ?f) ("@취미" . ?h) ("@컴퓨터" . ?c) ("@루틴" . ?r)))
-
-;; (add-hook 'org-mode-hook
-;; 		  (lambda ()
-;; 			(variable-pitch-mode)
-;; 			visual-line-mode))
-
-(setq org-hide-emphasis-markers t
-      org-fontify-done-headline t
-      org-hide-leading-stars t
-      org-pretty-entities t)
-
-(setq which-key-show-early-on-C-h t
-	  which-key-idle-delay 0
-	  which-key-idle-secondary-delay 0.05)
-(require 'which-key)
-(which-key-mode)
-
-
-(setq default-input-method "korean-hangul")
-;; (set-language-enviroment "Korean")
-;; (global-set-key (kbd "S-SPC") nil)
-(global-set-key (kbd "<Hangul>") 'toggle-input-method)
-
-(require 'all-the-icons)
-
-(require 'doom-modeline)
-(add-hook 'after-init-hook #'doom-modeline-mode)
-
-;;(defvar make-lang)
-;;(add-hook 'c++-mode-hook '#(lambda () (setq make-lang "c++")))
-;;(add-hook 'python-mode-hook '#(lambda () (setq make-lang "python")))
-
-(global-set-key (kbd "C-c b") 'helm-make-projectile)
-
-(global-set-key (kbd "C-c <left>")  'windmove-left)
-(global-set-key (kbd "C-c <right>") 'windmove-right)
-(global-set-key (kbd "C-c <up>")    'windmove-up)
-(global-set-key (kbd "C-c <down>")  'windmove-down)
-
-(require 'evil-org)
-(add-hook 'org-mode-hook 'evil-org-mode)
-(evil-org-set-key-theme '(navigation insert textobjects additional calendar))
-(require 'evil-org-agenda)
-(evil-org-agenda-set-keys)
-
-(when (eq system-type 'gnu/linux)
-  (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding")))
-
-(add-hook 'prog-mode-hook 'show-smartparens-mode)
-
-(defun run_make (TARGET)
-  ""
-  (if (symbolp (projectile-project-root))
-	  (error "Not in project")
-	(compile (concat "make -f .makefile -C " (projectile-project-root) " " TARGET) t)
-	))
-
-(global-set-key (kbd "<f5>") (lambda () (interactive) (run_make "build_and_run")))
-(global-set-key (kbd "<f6>") (lambda () (interactive) (run_make "build")))
-(global-set-key (kbd "<f7>") (lambda () (interactive) (run_make "run")))
-(global-set-key (kbd "<f8>") (lambda () (interactive) (run_make "build_and_test")))
-
-(setq org-agenda-custom-commands
-	  '(("c" "Weekly/Daily"
-		 ((agenda ""
-				  ((org-agenda-span 1)
-				   (org-agenda-start-on-weekday 0)))
-
-		  (agenda "")
-		  (alltodo ""))
-		 ))
-	  )
-
-;; (add-hook 'after-init-hook (lambda () (org-agenda nil "c")))
-;; (add-hook 'after-init-hook (lambda () (delete-other-windows)) t)
-
-(require 'dashboard)
-(dashboard-setup-startup-hook)
-(setq 
- dashboard-projects-backend 'projectile
- dashboard-startup-banner 'logo
- dashboard-items '((recents . 10)
-				   (projects . 5)
-				   (agenda . 5))
- dashboard-set-heading-icons t
- dashboard-set-file-icons t
- dashboard-banner-logo-title "삼다수통제조사"
- dashboard-filter-agenda-entry 'dashboard-filter-agenda-by-todo
- dashboard-week-agenda nil)
-(add-hook 'dashboard-mode-hook
-		  (lambda ()
-			(variable-pitch-mode)))
-
-(setq vc-follow-symlinks nil)
-
-(require 'vterm)
+(use-package helm-make
+  :ensure t
+  :config
+  (setq helm-make-comint t
+		helm-make-projectile t
+		helm-make-fuzzy-matching t)
+  :bind
+  (("C-c b" . helm-make-projectile)))
 
 (use-package org-roam
   :ensure t
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
+  :init (setq org-roam-v2-ack t):custom
   (org-roam-directory "~/Roam")
   :bind (("C-c n l" . org-roam-buffer-toggle)
-		 ("C-c n f" . org-roam-node-find)
-		 ("C-c n i" . org-roam-node-insert))
-  :config
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)):config
   (org-roam-setup))
 
-(good-scroll-mode 1)
+(use-package org-bullets
+  :ensure t
+  :hook
+  ((org-mode . org-bullets-mode)))
 
-(setq compilation-scroll-output t)
+(use-package org
+  :ensure t
+  :init
+  (setq org-src-tab-acts-natively t)
+  :config
+  (setq org-confirm-babel-evaluate nil
+		org-startup-with-inline-images t
+		org-log-dont t
+		org-agenda-files '("~/notes.org" "~/tasks.org")
+		org-startup-indented t
+		org-tag-alist '(("@학교" . ?s)
+						("@집" . ?f)
+						("@취미" . ?h)
+						("@컴퓨터" . ?c)
+						("@루틴" . ?r))
+		org-hide-emphasis-markers t
+		org-fontify-done-headline t
+		org-hide-emphasis-markers t
+		org-pretty-entities t)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+	 (C . t)
+	 (shell . t)
+	 (emacs-lisp . t)
+	 (calc . t)
+	 (haskell . t))))
 
-(global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
+(use-package which-key
+  :ensure t
+  :config
+  (setq which-key-show-early-on-C-h t
+		which-key-idle-delay 0.1
+		which-key-idle-secondary-delay 0.05)
+  (which-key-mode))
+
+(use-package evil-org
+  :ensure t
+  :init
+  (fset 'evil-redirect-digit-argument 'evil-org-beginning-of-line)
+  (evil-define-key 'motion 'evil-org-mode (kbd "0") 'evil-org-beginning-of-line)
+  :config
+  (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys)
+  :hook
+  ((org-mode . evil-org-mode)))
+
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-projects-backend 'projectile
+		dashboard-startup-banner 'logo
+		dashboard-items '((recents . 15) (projects . 10))
+		dashboard-set-heading-icons t
+		dashboard-set-file-icons t
+		dashboard-banner-logo-title "I can't work. I need to keep modding so it's fun once I work."
+		dashboard-set-init-info t
+		dashboard-set-footer nil
+		initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  (add-hook 'dashboard-mode-hook 'variable-pitch-mode))
+
+(use-package all-the-icons
+  :ensure t)
+
+(use-package doom-modeline
+  :ensure t)
+
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-mode +1))
+
+(use-package vterm
+  :ensure t)
+
+
+;; My custom functions
+(defun run_make (TARGET)
+  ""
+  (if (symbolp (projectile-project-root))
+      (error "Not in project")
+    (compile
+	 (concat "make -f .makefile -C " (projectile-project-root) " " TARGET)
+	 t)))
+
+
+;; Keybinds
+(global-set-key (kbd "C-c C-c")
+                'comment-or-uncomment-region)
+
+(global-set-key (kbd "C-c a")
+                'org-agenda)
+
+(global-set-key (kbd "<Hangul>")
+                'toggle-input-method)
+
+(global-set-key (kbd "M-h")
+                'windmove-left)
+(global-set-key (kbd "M-l")
+                'windmove-right)
+(global-set-key (kbd "M-k")
+                'windmove-up)
+(global-set-key (kbd "M-j")
+                'windmove-down)
+(global-set-key (kbd "M-p")
+                'ace-window)
+
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+(global-set-key (kbd "<f5>")
+                (lambda ()
+                  (interactive)
+                  (run_make "build_and_run")))
+(global-set-key (kbd "<f6>")
+                (lambda ()
+                  (interactive)
+                  (run_make "build")))
+(global-set-key (kbd "<f7>")
+                (lambda ()
+                  (interactive)
+                  (run_make "run")))
+(global-set-key (kbd "<f8>")
+                (lambda ()
+                  (interactive)
+                  (run_make "build_and_test")))
+
+(global-set-key (kbd "M-x") 'helm-M-x)
+
 
 (setq gc-cons-threshold (* 2 1000 1000))
