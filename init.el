@@ -8,14 +8,16 @@
 ;; |______/|__/  |__/|__/   \___/ |__/ \_______/|__/
 
 
-;; Init
 (setq gc-cons-threshold (* 50 1000 1000))
 
+
+;; Init
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+                         ("elpa" . "https://elpa.gnu.org/packages/")
+						 ("elpa-devel" . "https://elpa.gnu.org/devel/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -33,12 +35,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(global-display-line-numbers-mode t)
+ '(helm-minibuffer-history-key "M-p")
  '(highlight-indent-guides-method 'fill)
  '(menu-bar-mode nil)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
+ '(safe-local-variable-values
+   '((projectile-project-run-cmd . "cd build && ./LearnOpenGL")))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(vterm-use-vterm-prompt-detection-method t)
@@ -49,7 +54,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
 
 ;; themes
 (load-theme 'nord t)
@@ -85,7 +89,9 @@
                                      (alltodo ""))))
 	  vc-follow-symlinks nil
 	  frame-resize-pixelwise t
-	  confirm-kill-emacs nil)
+	  confirm-kill-emacs nil
+	  completion-styles '(partial-completion)
+	  completion-ignore-case t)
 
 (setq-default tab-width 4)
 (defvaralias 'c-basic-offset 'tab-width)
@@ -97,6 +103,9 @@
                         '("/home/yuchan/.cabal/bin" "/home/yuchan/.ghcup/bin"
                           "/home/yuchan/.local/bin"
                           "/home/yuchan/.ghcup/ghc/8.10.7/bin")))
+
+(if (display-graphic-p)
+	(good-scroll-mode 1))
 
 
 ;; Hooks
@@ -166,14 +175,14 @@
         company-tooltop-align-annotations t
         company-transformers '(company-sort-by-occurrence)
         company-quickhelp-delay 0
-        company-backends '(company-capf company-keywords)
+        company-backends '(company-capf company-keywords company-files company-ispell)
         company-show-quick-access t)
   (company-tng-configure-default)
   :hook
   (emacs-lisp-mode . company-mode)
   (cmake-mode . company-mode)
   :bind
-  (:map company-active-map ("TAB" . company-select-next-if-tooltip-visible-or-complete-selection))
+  (:map company-active-map ("TAB" . company-complete-common-and-select-next-if-tooltip-visible-or-complete-selection))
   (:map company-active-map ("<backtab>" . company-select-previous))
   (:map company-active-map ("RET" . nil)))
 
@@ -347,24 +356,29 @@
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-(global-set-key (kbd "<f5>")
-                (lambda ()
-                  (interactive)
-                  (run_make "build_and_run")))
-(global-set-key (kbd "<f6>")
-                (lambda ()
-                  (interactive)
-                  (run_make "build")))
-(global-set-key (kbd "<f7>")
-                (lambda ()
-                  (interactive)
-                  (run_make "run")))
-(global-set-key (kbd "<f8>")
-                (lambda ()
-                  (interactive)
-                  (run_make "build_and_test")))
+;; (global-set-key (kbd "<f5>")
+;;                 (lambda ()
+;;                   (interactive)
+;;                   (run_make "build_and_run")))
+;; (global-set-key (kbd "<f6>")
+;;                 (lambda ()
+;;                   (interactive)
+;;                   (run_make "build")))
+;; (global-set-key (kbd "<f7>")
+;;                 (lambda ()
+;;                   (interactive)
+;;                   (run_make "run")))
+;; (global-set-key (kbd "<f8>")
+;;                 (lambda ()
+;;                   (interactive)
+;;                   (run_make "build_and_test")))
 
-(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "<f5>") 'projectile-compile-project)
+(global-set-key (kbd "<f6>") 'projectile-run-project)
+(global-set-key (kbd "<f7>") 'projectile-test-project)
+(global-set-key (kbd "<f8>") 'projectile-configure-project)
+
+;; (global-set-key (kbd "M-x") 'helm-M-x)
 
 
 (setq gc-cons-threshold (* 2 1000 1000))
