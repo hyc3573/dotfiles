@@ -40,7 +40,7 @@
  '(menu-bar-mode nil)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline xkcd treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
  '(safe-local-variable-values
    '((projectile-project-run-cmd . "cd build && ./LearnOpenGL")))
@@ -91,7 +91,8 @@
 	  frame-resize-pixelwise t
 	  confirm-kill-emacs nil
 	  completion-styles '(partial-completion)
-	  completion-ignore-case t)
+	  completion-ignore-case t
+	  esup-depth 0)
 
 (setq-default tab-width 4)
 (defvaralias 'c-basic-offset 'tab-width)
@@ -106,6 +107,8 @@
 
 (if (display-graphic-p)
 	(good-scroll-mode 1))
+
+(show-paren-mode 0)
 
 
 ;; Hooks
@@ -153,7 +156,10 @@
    (lsp-mode . lsp-enable-which-key-integration))
   :commands
   lsp)
-(require 'lsp-haskell)
+
+(use-package lsp-haskell
+  :ensure t
+  :defer t)
 
 (use-package lsp-ui
   :ensure t
@@ -188,6 +194,7 @@
 
 (use-package smartparens
   :ensure t
+  :defer t
   :hook
   ((c++-mode . smartparens-mode)
    (python-mode . smartparens-mode)
@@ -201,7 +208,8 @@
 
 (use-package centaur-tabs
   :ensure t
-  :demand :config
+  :demand
+  :config
   (centaur-tabs-headline-match)
   (centaur-tabs-mode t)
   :custom
@@ -246,6 +254,7 @@
 
 (use-package org
   :ensure t
+  :defer t
   :init
   (setq org-src-tab-acts-natively t)
   :config
@@ -319,7 +328,8 @@
   (projectile-mode +1))
 
 (use-package vterm
-  :ensure t)
+  :ensure t
+  :defer t)
 
 
 ;; My custom functions
