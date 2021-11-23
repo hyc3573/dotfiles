@@ -1,6 +1,7 @@
-#!/bin/sh
+##!/bin/sh
 
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
 
+export PATH=/home/yuchan/.local/bin:/home/yuchan/.ghcup/ghc/8.10.7/bin:/home/yuchan/.ghcup/bin:$HOME/bin:/usr/local/bin:$PATH
