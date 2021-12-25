@@ -26,6 +26,7 @@
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
 ;; b
 (require 'use-package)
 (setq use-package-always-ensure t)
@@ -40,10 +41,18 @@
  '(menu-bar-mode nil)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(gdscript-mode xkcd suggest symon selectric-mode pacmacs magit icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(fira-code-mode chess rainbow-mode vimish-fold gdscript-mode xkcd suggest symon selectric-mode pacmacs magit icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
  '(safe-local-variable-values
-   '((projectile-project-run-cmd . "cd build && ./LearnOpenGL")))
+   '((projectile-project-run-cmd . "cd build && ./a")
+	 (projectile-project-run-cmd . "cd build && ./path_tracing")
+	 (projectile-project-run-cmd . "runghc main.hs")
+	 (projectile-project-run-cmd . "ghc -e main.hs")
+	 (projectile-project-run-cmd . "ghci main.hs")
+	 (projectile-project-run-cmd . "cd ~/Project/dongari && ./main.py")
+	 (projectile-project-run-cmd . "./main.py")
+	 (projectile-project-run-cmd . "cd build && ./raytracer")
+	 (projectile-project-run-cmd . "cd build && ./LearnOpenGL")))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(vterm-use-vterm-prompt-detection-method t)
@@ -56,36 +65,18 @@
  )
 
 
-;; if running daemon
-(if (daemonp)
-	(add-hook 'after-make-frame-functions
-			  (lambda (frame)
-				(with-selected-frame frame
-				  (progn
-					(load-theme 'nord t)
-					(good-scroll-mode)
-					(when (eq system-type 'gnu/linux)
-					  (set-fontset-font t
-										'hangul
-										(font-spec :name "NanumGothicCoding"))))))))
-
-
-;; themes
-(if (daemonp)
-	(add-hook 'after-make-frame-functions
-			  (lambda (frame)
-				(with-selected-frame frame
-				  (load-theme 'nord t)))))
-
-(load-theme 'nord t)
-(set-face-attribute 'default nil
-					:font "MesloLGS NF"
-                    :height 130)
-(when (eq system-type 'gnu/linux)
-  (set-fontset-font t
-                    'hangul
-                    (font-spec :name "NanumGothicCoding")))
-
+;; theme
+(add-hook 'after-make-frame-functions #'(lambda (frame) "" (interactive)
+										  (if t
+											  (with-selected-frame frame
+												(progn
+												  (load-theme 'nord t)
+												  (set-face-attribute 'default nil
+																	  :font "FiraCode Nerd Font"
+																	  :height 160)
+												  (set-fontset-font t
+																	'hangul
+																	(font-spec :name "NanumGothicCoding")))))))
 
 ;; configs
 (setq native-comp-async-report-warnings-errors nil
@@ -128,9 +119,6 @@
                           "/home/yuchan/.local/bin"
                           "/home/yuchan/.ghcup/ghc/8.10.7/bin")))
 
-(if (display-graphic-p)
-	(good-scroll-mode 1))
-
 (show-paren-mode 0)
 
 
@@ -172,7 +160,8 @@
   (setq lsp-keymap-prefix "C-c l")
   :config
   (setq lsp-enable-snpippet nil lsp-signature-function
-        'lsp-signature-posframe)
+        'lsp-signature-posframe
+		lsp-lens-enable nil)
   :hook
   ((c++-mode . lsp)
    (c-mode . lsp)
@@ -352,7 +341,9 @@
 (use-package projectile
   :ensure t
   :config
-  (projectile-mode +1))
+  (projectile-mode +1)
+  (setq projectile-run-use-comint-mode t
+		projectile-test-use-comint-mode t))
 
 (use-package vterm
   :ensure t
@@ -364,6 +355,17 @@
 
 (use-package selectric-mode
   :ensure t)
+
+(use-package rainbow-mode
+  :ensure t
+  :hook
+  (text . rainbow-mode))
+
+(use-package fira-code-mode
+  :ensure t
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'fira-code-mode)
+  (add-hook 'prog-mode-hook 'fira-code-mode))
 
 
 ;; My custom functions
@@ -384,6 +386,8 @@
 
 (global-set-key (kbd "<Hangul>")
                 'toggle-input-method)
+(global-set-key (kbd "S-SPC")
+				nil)
 
 (global-set-key (kbd "M-h")
                 'windmove-left)

@@ -1,7 +1,10 @@
-##!/bin/sh
+#!/bin/sh
 
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
 
 export PATH=/home/yuchan/.local/bin:/home/yuchan/.ghcup/ghc/8.10.7/bin:/home/yuchan/.ghcup/bin:$HOME/bin:/usr/local/bin:$PATH
+
+export CONAN_USER_HOME="$XDG_CONFIG_HOME"
+export GOPATH="$XDG_DATA_HOME"/go

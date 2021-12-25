@@ -1,11 +1,20 @@
-neofetch --ascii
-sleep 0.1
+sleep .3
+neofetch --sixel | lolcat
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+ZSH_THEME="powerlevel10k/powerlevel10k" # set by `omz`
 
 source ~/Git/znap/zsh-snap/znap.zsh
 
 znap source marlonrichert/zsh-autocomplete
 
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=/home/yuchan/.local/bin:/home/yuchan/.ghcup/ghc/8.10.7/bin:/home/yuchan/.ghcup/bin:$HOME/bin:/usr/local/bin:$PATH
 
 export ZSH="/home/yuchan/.oh-my-zsh"
 
@@ -49,9 +58,26 @@ distributions are really distributions of GNU/Linux."
 
 export PATH=$PATH:/home/yuchan/.local/bin
 alias rm='rm -i'
-
+alias mpvs='mpv --vo=sixel --really-quiet'
 alias vim='nvim'
+alias enw='emacs -nw'
 
 [ -f "/home/yuchan/.ghcup/env" ] && source "/home/yuchan/.ghcup/env" # ghcup-env
 
-# ZSH_THEME="agnoster" # set by `omz`
+# ZSH_THEME="typewritten" # set by `omz`
+
+export CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
+export CABAL_DIR="$XDG_CACHE_HOME"/cabal
+export CARGO_HOME="$XDG_DATA_HOME"/cargo
+export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
+export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+export KDEHOME="$XDG_CONFIG_HOME"/kde
+
+setopt auto_pushd
+setopt PUSHDSILENT
+
+fpath=($fpath "/home/yuchan/.zfunctions")
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ ! -f ~/.profile  ]] || source ~/.profile
