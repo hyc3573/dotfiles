@@ -17,3 +17,5 @@ for FILE in `ls -a -I .git -I . -I .. -I init.el -I config.fish -I install.sh -I
 do
 	ln -s `pwd`/$FILE $HOME/$FILE
 done
+
+xrdb -merge ~/.Xresources
