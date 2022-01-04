@@ -56,6 +56,16 @@
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(vterm-use-vterm-prompt-detection-method t)
+ '(warning-suppress-log-types
+   '(((fira-code-ligatures))
+	 ((fira-code-ligatures))
+	 ((fira-code-ligatures))
+	 ((fira-code-ligatures))))
+ '(warning-suppress-types
+   '(((fira-code-ligatures))
+	 ((fira-code-ligatures))
+	 ((fira-code-ligatures))
+	 ((fira-code-ligatures))))
  '(xterm-mouse-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -73,10 +83,19 @@
 												  (load-theme 'nord t)
 												  (set-face-attribute 'default nil
 																	  :font "FiraCode Nerd Font"
-																	  :height 160)
+																	  :height 130)
 												  (set-fontset-font t
 																	'hangul
-																	(font-spec :name "NanumGothicCoding")))))))
+																	(font-spec :name "NanumGothicCoding"))
+												  (when (display-graphic-p) (add-hook 'emacs-lisp-mode-hook 'fira-code-mode)))))))
+
+(load-theme 'nord t)
+(set-face-attribute 'default nil
+					:font "FiraCode Nerd Font"
+					:height 130)
+(set-fontset-font t
+				  'hangul
+				  (font-spec :name "NanumGothicCoding"))
 
 ;; configs
 (setq native-comp-async-report-warnings-errors nil
@@ -364,13 +383,11 @@
 (use-package fira-code-mode
   :ensure t
   :config
-  (add-hook 'emacs-lisp-mode-hook 'fira-code-mode)
-  (add-hook 'prog-mode-hook 'fira-code-mode))
+  (when (display-graphic-p) (add-hook 'emacs-lisp-mode-hook 'fira-code-mode)))
 
 
 ;; My custom functions
 (defun run-make (TARGET)
-  ""
   (if (symbolp (projectile-project-root))
       (error "Not in project")
     (compile
