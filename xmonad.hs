@@ -142,7 +142,7 @@ main = xmonad $ kdeConfig
     { modMask = mod4Mask
     , manageHook = manageHook kdeConfig <+> myManageHook
     , terminal = "wezterm"
-    , borderWidth = 2
+    , borderWidth = 1
     , normalBorderColor = "#2e3440"
     , focusedBorderColor = "#81a1c1"
     , layoutHook = myLayout
@@ -170,8 +170,8 @@ main = xmonad $ kdeConfig
     , ("M-C-e", sendMessage Expand)
     , ("M-S-c", windows $ W.shift "SP")
     , ("M-c", windows $ W.view "SP")
-    , ("M-x o g", spawn "~/.config/i3/scripts/ocr.sh")
-    , ("M-x o t", spawn "~/.config/i3/scripts/ocr_trans.sh")
+    , ("M-x g g", spawn "~/.config/i3/scripts/ocr.sh")
+    , ("M-x g r", spawn "~/.config/i3/scripts/ocr_trans.sh")
     , ("M-x q", spawn "~/.config/i3/scripts/quickrunner.sh")
     , ("M-x x", spawn "rofi -show drun -show-icons" )
     , ("M-x c", spawn "rofi -show calc -modi calc -no-show-match -no-sort")

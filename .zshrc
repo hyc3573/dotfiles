@@ -1,4 +1,4 @@
-sleep .3
+sleep .4
 neofetch --sixel | lolcat
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
