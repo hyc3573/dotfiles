@@ -33,11 +33,6 @@ set clipboard=unnamedplus
 set undodir=$HOME/.vim/undodir
 set undofile
 
-if (has("termguicolors"))
-	set termguicolors
-endif
-
-
 let g:C_Ctrl_j = 'off'
 
 nnoremap <C-h> <C-w>h
