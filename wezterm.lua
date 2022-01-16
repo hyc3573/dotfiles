@@ -5,7 +5,6 @@ return {
 	use_ime = true,
 	enable_tab_bar = false,
 	window_background_opacity = 0.5,
-	ratelimit_output_bytes_per_second = 1000000000,
 	check_for_updates = false,
 	skip_close_confirmation_for_processes_named = {
 		"bash", "sh", "zsh", "fish", "tmux", "vim", "emacsclient", "emacs"
