@@ -20,6 +20,14 @@ import XMonad.Actions.CycleWS ()
 import XMonad.Layout.Renamed
 import XMonad.Layout.NoBorders
 import XMonad.Hooks.ManageHelpers
+import XMonad.Layout.WindowNavigation
+import XMonad.Layout.SubLayouts
+import XMonad.Layout.BoringWindows
+import HscTypes (Usage(UsageMergedRequirement))
+import XMonad.Layout.Fullscreen
+import XMonad.Layout.IndependentScreens
+import XMonad.Layout.WindowNavigation (windowNavigation)
+import Data.List as L
 
 myManageHook = composeAll  
   [ className =? "yakuake" --> doFloat  
@@ -40,16 +48,22 @@ myManageHook = composeAll
   , className =? "ksmserver-logout-greeter" --> doIgnore
   , isDialog --> doFloat
   , isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION" --> doFloat >> doIgnore 
+  , className =? "GL" --> doFloat
+  , className ~? "gnome-pie" --> hasBorder False
   ]
+  where
+   q ~? x = fmap (x `L.isInfixOf`) q
 
 myLayout = lessBorders Never $ tall ||| grid ||| full ||| fullWithBar
-  where tall = renamed [Replace "Tall"] $ desktopLayoutModifiers $ spacing 5 $ Tall 1 (3/100) (1/2)
-        grid = renamed [Replace "Grid"] $ desktopLayoutModifiers $ spacing 5 $ Grid
-        full = renamed [Replace "Full"] $ noBorders Full
-        fullWithBar = renamed [ Replace "FullWB" ] $ desktopLayoutModifiers $ noBorders Full
+  where tall = renamed [XMonad.Layout.Renamed.Replace "Tall"] $ desktopLayoutModifiers $ spacing 3 $ Tall 1 (3/100) (1/2)
+        grid = renamed [XMonad.Layout.Renamed.Replace "Grid"] $ desktopLayoutModifiers $ spacing 3 $ Grid
+        full = renamed [XMonad.Layout.Renamed.Replace "Full"] $ windowNavigation $ subLayout [] subTall $ boringWindows $ noBorders Full
+        fullWithBar = renamed [XMonad.Layout.Renamed.Replace "FullWB" ] $ desktopLayoutModifiers $ windowNavigation $ subLayout [] subTall $ boringWindows $ noBorders Full
+        subTall = Tall 1 (3/100) (1/2)
 
 myStartupHook = do
   spawn "picom -bc"
+  spawn "sleep 1; ~/.config/polybar/launch.sh"
 
 myKeys :: XConfig l -> Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
@@ -131,14 +145,14 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
     --
-    [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+    [((m .|. modm, k), windows $ onCurrentScreen f i)
+        | (i, k) <- zip (workspaces' conf) [xK_1 .. xK_9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-
-myWorkspaces = ["1", "2", "3", "4", "SP"]
+  
+myWorkspaces = withScreens 2 ["1", "2", "3", "4", "SP"]
 
 main :: IO()
-main = xmonad $ kdeConfig
+main = xmonad $ fullscreenSupport $ kdeConfig
     { modMask = mod4Mask
     , manageHook = manageHook kdeConfig <+> myManageHook
     , terminal = "wezterm"
@@ -168,8 +182,8 @@ main = xmonad $ kdeConfig
     , ("M-S-w", windows W.swapMaster)
     , ("M-C-s", sendMessage Shrink)
     , ("M-C-e", sendMessage Expand)
-    , ("M-S-c", windows $ W.shift "SP")
-    , ("M-c", windows $ W.view "SP")
+    , ("M-S-c", windows $ onCurrentScreen W.shift "SP")
+    , ("M-c", windows $ onCurrentScreen W.view "SP")
     , ("M-x g g", spawn "~/.config/i3/scripts/ocr.sh")
     , ("M-x g r", spawn "~/.config/i3/scripts/ocr_trans.sh")
     , ("M-x q", spawn "~/.config/i3/scripts/quickrunner.sh")
@@ -186,6 +200,9 @@ main = xmonad $ kdeConfig
     , ("M-b", screenWorkspace 1 >>= flip whenJust (windows . W.view))
     , ("M-S-v", screenWorkspace 0 >>= flip whenJust (windows . s W.view W.shift))
     , ("M-S-b", screenWorkspace 1 >>= flip whenJust (windows . s W.view W.shift))
+    , ("M-g a", withFocused (sendMessage . mergeDir W.focusUp'))
+    , ("M-g d", withFocused (sendMessage . mergeDir W.focusUp'))
+    , ("M-g u", withFocused (sendMessage . UnMerge))
     ]
   where
     s a b c = a c . b c
