@@ -10,7 +10,6 @@
 
 (setq gc-cons-threshold (* 50 1000 1000))
 
-
 ;; Init
 (require 'package)
 
@@ -41,10 +40,15 @@
  '(menu-bar-mode nil)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(fira-code-mode chess rainbow-mode vimish-fold gdscript-mode xkcd suggest symon selectric-mode pacmacs magit icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(paradox hotfuzz selectrum-prescient selectrum smex fira-code-mode chess rainbow-mode vimish-fold gdscript-mode xkcd suggest symon selectric-mode pacmacs magit icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
  '(safe-local-variable-values
-   '((projectile-project-run-cmd . "cd build && ./a")
+   '((projectile-project-compilation-cmd . "make")
+	 (projectile-project-run-cmd . \./GL)
+	 (projectile-project-compilation-cmd . make)
+	 (projectile-project-name . GL)
+	 (projectile-project-run-cmd . "./GL")
+	 (projectile-project-run-cmd . "cd build && ./a")
 	 (projectile-project-run-cmd . "cd build && ./path_tracing")
 	 (projectile-project-run-cmd . "runghc main.hs")
 	 (projectile-project-run-cmd . "ghc -e main.hs")
@@ -65,8 +69,7 @@
    '(((fira-code-ligatures))
 	 ((fira-code-ligatures))
 	 ((fira-code-ligatures))
-	 ((fira-code-ligatures))))
- '(xterm-mouse-mode t))
+	 ((fira-code-ligatures)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -76,26 +79,19 @@
 
 
 ;; theme
-(add-hook 'after-make-frame-functions #'(lambda (frame) "" (interactive)
-										  (if t
-											  (with-selected-frame frame
-												(progn
-												  (load-theme 'nord t)
-												  (set-face-attribute 'default nil
-																	  :font "FiraCode Nerd Font"
-																	  :height 130)
-												  (set-fontset-font t
-																	'hangul
-																	(font-spec :name "NanumGothicCoding"))
-												  (when (display-graphic-p) (add-hook 'emacs-lisp-mode-hook 'fira-code-mode)))))))
+(defun my-frame-config (frame)
+  (with-selected-frame frame
+	(progn
+	  (load-theme 'nord t)
+	  (set-face-attribute 'default nil
+						  :font "FiraCode Nerd Font"
+						  :height 130)
+	  (set-fontset-font t
+						'hangul
+						(font-spec :name "NanumGothicCoding")))))
 
-(load-theme 'nord t)
-(set-face-attribute 'default nil
-					:font "FiraCode Nerd Font"
-					:height 130)
-(set-fontset-font t
-				  'hangul
-				  (font-spec :name "NanumGothicCoding"))
+(my-frame-config (selected-frame))
+(add-hook 'after-make-frame-functions 'my-frame-config)
 
 ;; configs
 (setq native-comp-async-report-warnings-errors nil
@@ -121,7 +117,7 @@
 	  vc-follow-symlinks nil
 	  frame-resize-pixelwise t
 	  confirm-kill-emacs nil
-	  completion-styles '(partial-completion)
+	  completion-styles '(hotfuzz)
 	  completion-ignore-case t
 	  esup-depth 0
 	  compilation-read-command nil
@@ -171,15 +167,17 @@
 (use-package evil-collection
   :ensure t
   :after evil
-  :config (evil-collection-init))
+  :custom 
+  (evil-collection-setup-minibuffer t)
+  :init (evil-collection-init))
 
 (use-package lsp-mode
   :ensure t
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
-  (setq lsp-enable-snpippet nil lsp-signature-function
-        'lsp-signature-posframe
+  (setq lsp-enable-snpippet nil
+		lsp-signature-doc-lines 2
 		lsp-lens-enable nil)
   :hook
   ((c++-mode . lsp)
@@ -198,6 +196,7 @@
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode)
+
 (use-package lsp-treemacs
   :ensure t
   :commands lsp-treemacs-errors-list)
@@ -345,7 +344,7 @@
 		dashboard-items '((recents . 15) (projects . 10))
 		dashboard-set-heading-icons t
 		dashboard-set-file-icons t
-		dashboard-banner-logo-title "I can't work. I need to keep modding so it's fun once I work."
+		dashboard-banner-logo-title "gentleman"
 		dashboard-set-init-info t
 		dashboard-set-footer nil
 		initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
@@ -380,19 +379,22 @@
   :hook
   (text . rainbow-mode))
 
-(use-package fira-code-mode
+(use-package selectrum
   :ensure t
   :config
-  (when (display-graphic-p) (add-hook 'emacs-lisp-mode-hook 'fira-code-mode)))
+  (selectrum-mode +1)
+  (selectrum-prescient-mode +1)
+  (prescient-persist-mode +1)
+  (hotfuzz-selectrum-mode +1))
+
+(use-package paradox
+  :config
+  (paradox-enable))
+
+(xterm-mouse-mode 1)
 
 
 ;; My custom functions
-(defun run-make (TARGET)
-  (if (symbolp (projectile-project-root))
-      (error "Not in project")
-    (compile
-	 (concat "make -f .makefile -C " (projectile-project-root) " " TARGET)
-	 t)))
 
 ;; Keybinds
 (global-set-key (kbd "C-c C-c")
@@ -402,6 +404,8 @@
                 'org-agenda)
 
 (global-set-key (kbd "<Hangul>")
+                'toggle-input-method)
+(global-set-key (kbd "<65329>")
                 'toggle-input-method)
 (global-set-key (kbd "S-SPC")
 				nil)
@@ -441,7 +445,5 @@
 (global-set-key (kbd "<f6>") 'projectile-run-project)
 (global-set-key (kbd "<f7>") 'projectile-test-project)
 (global-set-key (kbd "<f8>") 'projectile-configure-project)
-
-;; (global-set-key (kbd "M-x") 'helm-M-x)
 
 (setq gc-cons-threshold (* 2 1000 1000))
