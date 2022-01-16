@@ -1,3 +1,5 @@
+Emacs.useXIM: off
+
 XTerm*faceName: MesloLGS NF:size=12
 UXTerm*faceName: MesloLGS NF:size=12
 
