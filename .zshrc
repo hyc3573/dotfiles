@@ -1,5 +1,5 @@
-sleep .4
-neofetch --sixel | lolcat
+sleep 0.5
+neofetch
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -14,7 +14,7 @@ source ~/Git/znap/zsh-snap/znap.zsh
 
 znap source marlonrichert/zsh-autocomplete
 
-export PATH=/home/yuchan/.local/bin:/home/yuchan/.ghcup/ghc/8.10.7/bin:/home/yuchan/.ghcup/bin:$HOME/bin:/usr/local/bin:$PATH
+export PATH=/home/yuchan/.local/bin:/home/yuchan/.ghcup/ghc/8.10.7/bin:/home/yuchan/.ghcup/bin:$HOME/bin:/usr/local/bin:$HOME/Scripts:$PATH
 
 export ZSH="/home/yuchan/.oh-my-zsh"
 
@@ -60,7 +60,10 @@ export PATH=$PATH:/home/yuchan/.local/bin
 alias rm='rm -i'
 alias mpvs='mpv --vo=sixel --really-quiet'
 alias vim='nvim'
-alias enw='emacs -nw'
+alias enw='emacsclient -nw'
+alias emacs='emacsclient -c'
+alias ere='systemctl --user restart emacs'
+alias addm='yt-dlp --extract-audio -o "~/Musics/%(title)s.%(ext)s"'
 
 [ -f "/home/yuchan/.ghcup/env" ] && source "/home/yuchan/.ghcup/env" # ghcup-env
 
