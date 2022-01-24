@@ -28,6 +28,24 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.WindowNavigation (windowNavigation)
 import Data.List as L
+import qualified XMonad.StackSet as SS
+import Data.Monoid (All (All))
+import Foreign.C (CInt)
+import Control.Monad (when)
+import Data.Foldable (find)
+import XMonad.Actions.UpdateFocus
+import qualified XMonad.Config.Dmwit (withScreen)
+import qualified XMonad.Config.Dmwit (viewShift)
+import XMonad.Actions.OnScreen (onlyOnScreen)
+import XMonad.Actions.Warp (warpToWindow)
+import XMonad.Hooks.ManageDocks (avoidStruts)
+import XMonad.Layout.Minimize
+import XMonad.Actions.Minimize
+import XMonad.Layout.BoringWindows as BW
+import XMonad.Actions.WindowBringer as WBR
+import XMonad.Util.WorkspaceCompare
+import XMonad.StackSet (greedyView)
+import XMonad.Layout.ResizableTile
 
 myManageHook = composeAll  
   [ className =? "yakuake" --> doFloat  
@@ -50,20 +68,23 @@ myManageHook = composeAll
   , isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION" --> doFloat >> doIgnore 
   , className =? "GL" --> doFloat
   , className ~? "gnome-pie" --> hasBorder False
+  , isFullscreen --> hasBorder False
   ]
   where
    q ~? x = fmap (x `L.isInfixOf`) q
 
-myLayout = lessBorders Never $ tall ||| grid ||| full ||| fullWithBar
-  where tall = renamed [XMonad.Layout.Renamed.Replace "Tall"] $ desktopLayoutModifiers $ spacing 3 $ Tall 1 (3/100) (1/2)
-        grid = renamed [XMonad.Layout.Renamed.Replace "Grid"] $ desktopLayoutModifiers $ spacing 3 $ Grid
-        full = renamed [XMonad.Layout.Renamed.Replace "Full"] $ windowNavigation $ subLayout [] subTall $ boringWindows $ noBorders Full
-        fullWithBar = renamed [XMonad.Layout.Renamed.Replace "FullWB" ] $ desktopLayoutModifiers $ windowNavigation $ subLayout [] subTall $ boringWindows $ noBorders Full
+myLayout = lessBorders Never $ minimize $ BW.boringWindows $ tall ||| grid ||| full ||| fullWithBar
+  where tall = renamed [XMonad.Layout.Renamed.Replace "Tall"] $ avoidStruts $ spacing 10 $ ResizableTall 1 (3/100) (1/2) []
+        grid = renamed [XMonad.Layout.Renamed.Replace "Grid"] $ avoidStruts $ spacing 10 Grid
+        full = renamed [XMonad.Layout.Renamed.Replace "Full"] $ windowNavigation $ subLayout [] subTall $ noBorders Full
+        fullWithBar = renamed [XMonad.Layout.Renamed.Replace "FullWB" ] $ avoidStruts $ windowNavigation $ subLayout [] subTall $ noBorders Full
         subTall = Tall 1 (3/100) (1/2)
 
 myStartupHook = do
   spawn "picom -bc"
   spawn "sleep 1; ~/.config/polybar/launch.sh"
+  spawn "setxkbmap -option caps:escape"
+  modify $ \xstate -> xstate { windowset = onlyOnScreen 1 "1_1" (windowset xstate) }
 
 myKeys :: XConfig l -> Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
@@ -148,11 +169,21 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, k), windows $ onCurrentScreen f i)
         | (i, k) <- zip (workspaces' conf) [xK_1 .. xK_9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-  
-myWorkspaces = withScreens 2 ["1", "2", "3", "4", "SP"]
 
+multiScreenFocusHook :: Event -> X All
+multiScreenFocusHook MotionEvent { ev_x = x, ev_y = y } = do
+  -- focusScreenForPos x y
+  io (appendFile "/home/yuchan/.log/xmonad.log" (show x ++ " " ++ show y ++ "\n"))
+  return (All True)
+  where focusScreenForPos :: CInt -> CInt
+            -> X ()
+        focusScreenForPos x y
+          | x <= 1920 = windows $ withWspOnScreen 0 W.view
+          | otherwise = windows $ withWspOnScreen 1 W.view
+multiScreenFocusHook _ = return (All True)
+  
 main :: IO()
-main = xmonad $ fullscreenSupport $ kdeConfig
+main = xmonad $ fullscreenSupportBorder $ ewmh $ kdeConfig
     { modMask = mod4Mask
     , manageHook = manageHook kdeConfig <+> myManageHook
     , terminal = "wezterm"
@@ -162,31 +193,40 @@ main = xmonad $ fullscreenSupport $ kdeConfig
     , layoutHook = myLayout
     , startupHook = myStartupHook
     , XMonad.keys = myKeys
-    , workspaces = myWorkspaces
+    , workspaces = withScreens 2 ["1", "2", "3", "4"]
+    -- , handleEventHook = handleEventHook kdeConfig <+> multiScreenFocusHook
+    -- , rootMask = rootMask kdeConfig .|. pointerMotionMask
+    -- , clientMask = clientMask kdeConfig .|. pointerMotionMask
     }
   `additionalKeysP`
-    [ ("M-S-r", spawn "xmonad --recompile; xmonad --restart")
+    [ ("M-S-r", spawn "xmonad --recompile && xmonad --restart && notify-send XMonad Restarted! || notify-send XMonad Failed!")
     , ("M-S-<Space>", withFocused $ windows . W.sink)
-    , ("M-<Space>", spawn "wmctrl -iR `wmctrl -l | rofi -dmenu -p \"window\" | awk '{ print $1 }'`")
+    -- , ("M-<Space>", spawn "wmctrl -iR `wmctrl -l | rofi -dmenu -p \"window\" | awk '{ print $1 }'`")
+    , ("M-<Space>", do c <- windowMap' def
+                       win <- menuMapArgs "rofi" ["-dmenu", "-p 'window'"] c
+                       whenJust win maximizeWindow
+                       whenJust win (windows . bringWindow)
+                       whenJust win focus
+                       centerMouse)
     , ("M-f t", sendMessage $ JumpToLayout "Tall")
     , ("M-f f", sendMessage $ JumpToLayout "Full")
     , ("M-f g", sendMessage $ JumpToLayout "Grid")
-    , ("M-f m", sendMessage $ JumpToLayout "FullWB")
+    , ("M-f w", sendMessage $ JumpToLayout "FullWB")
     , ("M-S-q", kill)
     , ("M-S-e", spawn "qdbus-qt5 org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout -1 -1 -1")
-    , ("M-a", windows W.focusUp)
-    , ("M-d", windows W.focusDown)
-    , ("M-w", windows W.focusMaster)
+    , ("M-a", BW.focusUp)
+    , ("M-d", BW.focusDown)
+    , ("M-w", BW.focusMaster)
     , ("M-S-a", windows W.swapUp)
     , ("M-S-d", windows W.swapDown)
     , ("M-S-w", windows W.swapMaster)
-    , ("M-C-s", sendMessage Shrink)
-    , ("M-C-e", sendMessage Expand)
-    , ("M-S-c", windows $ onCurrentScreen W.shift "SP")
-    , ("M-c", windows $ onCurrentScreen W.view "SP")
+    , ("M-C-s", sendMessage MirrorShrink)
+    , ("M-C-w", sendMessage MirrorExpand)
+    , ("M-C-a", sendMessage Shrink)
+    , ("M-C-d", sendMessage Expand)
+    , ("M-S-c", withFocused minimizeWindow)
     , ("M-x g g", spawn "~/.config/i3/scripts/ocr.sh")
     , ("M-x g r", spawn "~/.config/i3/scripts/ocr_trans.sh")
-    , ("M-x q", spawn "~/.config/i3/scripts/quickrunner.sh")
     , ("M-x x", spawn "rofi -show drun -show-icons" )
     , ("M-x c", spawn "rofi -show calc -modi calc -no-show-match -no-sort")
     , ("M-x b", spawn "brave")
@@ -196,13 +236,26 @@ main = xmonad $ fullscreenSupport $ kdeConfig
     , ("M-x s", spawn "systemsettings5")
     , ("M-x t", spawn "wezterm")
     , ("M-x h", spawn "multimc -l 1.8.9")
-    , ("M-v", screenWorkspace 0 >>= flip whenJust (windows . W.view))
-    , ("M-b", screenWorkspace 1 >>= flip whenJust (windows . W.view))
-    , ("M-S-v", screenWorkspace 0 >>= flip whenJust (windows . s W.view W.shift))
-    , ("M-S-b", screenWorkspace 1 >>= flip whenJust (windows . s W.view W.shift))
-    , ("M-g a", withFocused (sendMessage . mergeDir W.focusUp'))
-    , ("M-g d", withFocused (sendMessage . mergeDir W.focusUp'))
-    , ("M-g u", withFocused (sendMessage . UnMerge))
+    , ("M-v", do
+          windows $ withWspOnScreen 0 W.view
+          centerMouse)
+    , ("M-b", do
+          windows $ withWspOnScreen 1 W.view
+          centerMouse)
+    , ("M-S-v", windows (withWspOnScreen 0 (s W.view W.shift)) >> centerMouse) 
+    , ("M-S-b", windows (withWspOnScreen 1 (s W.view W.shift)) >> centerMouse)
+    , ("M-m a", withFocused (sendMessage . mergeDir W.focusUp'))
+    , ("M-m d", withFocused (sendMessage . mergeDir W.focusUp'))
+    , ("M-m u", withFocused (sendMessage . UnMerge))
+    , ("M-s d", do ws <- wsBy 1
+                   let vws = unmarshallW ws
+                   windows $ onCurrentScreen W.greedyView vws)
+    , ("M-s a", do ws <- wsBy (-1)
+                   let vws = unmarshallW ws
+                   windows $ onCurrentScreen W.greedyView vws)
     ]
   where
     s a b c = a c . b c
+    onScreen id f vws ws = f (marshall id vws) ws
+    centerMouse = warpToWindow (1/2) (1/2)
+    wsBy = CWS.findWorkspace getSortByIndex Next CWS.anyWS
