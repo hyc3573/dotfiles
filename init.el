@@ -9,6 +9,7 @@
 
 
 (setq gc-cons-threshold (* 50 1000 1000))
+(setq read-process-output-max (* 1024 1024))
 
 ;; Init
 (require 'package)
@@ -34,16 +35,21 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
  '(global-display-line-numbers-mode nil)
  '(helm-minibuffer-history-key "M-p")
  '(highlight-indent-guides-method 'fill)
  '(menu-bar-mode nil)
+ '(nord-uniform-mode-lines t)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(paradox hotfuzz selectrum-prescient selectrum smex fira-code-mode chess rainbow-mode vimish-fold gdscript-mode xkcd suggest symon selectric-mode pacmacs magit icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(nano nano-theme doom-themes spaceline telephone-line smart-mode-line-powerline-theme simple-mpc paradox hotfuzz selectrum-prescient selectrum smex fira-code-mode chess rainbow-mode vimish-fold gdscript-mode xkcd suggest symon selectric-mode pacmacs magit icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
  '(safe-local-variable-values
-   '((projectile-project-compilation-cmd . "make")
+   '((projectile-project-name . sfpc)
+	 (projectile-project-run-cmd . "./main")
+	 (projectile-project-compilation-cmd . "make")
 	 (projectile-project-run-cmd . \./GL)
 	 (projectile-project-compilation-cmd . make)
 	 (projectile-project-name . GL)
@@ -93,6 +99,13 @@
 (my-frame-config (selected-frame))
 (add-hook 'after-make-frame-functions 'my-frame-config)
 
+;; (use-package doom-themes
+;;   :ensure t
+;;   :config
+;;   (load-theme 'doom-nord t))
+
+
+
 ;; configs
 (setq native-comp-async-report-warnings-errors nil
 	  tab-width 4
@@ -121,7 +134,11 @@
 	  completion-ignore-case t
 	  esup-depth 0
 	  compilation-read-command nil
-	  use-package-verbose t)
+	  use-package-verbose t
+	  display-line-numbers-current-absolute t
+	  display-line-numbers-type 'relative
+	  scroll-step 1
+	  scroll-conservatively 10000)
 
 (setq-default tab-width 4)
 (defvaralias 'c-basic-offset 'tab-width)
@@ -135,13 +152,15 @@
                           "/home/yuchan/.ghcup/ghc/8.10.7/bin")))
 
 (show-paren-mode 0)
+(global-hl-line-mode +1)
+(xterm-mouse-mode 1)
 
 
 ;; Hooks
 (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
 (add-hook 'emacs-lisp-mode-hook #'highlight-indent-guides-mode)
 (add-hook 'org-mode-hook #'prettify-symbols-mode)
-(add-hook 'after-init-hook #'doom-modeline-mode)
+;; (add-hook 'after-init-hook #'doom-modeline-mode)
 (add-hook 'prog-mode-hook #'show-smartparens-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'emacs-lisp-mode-hook #'display-line-numbers-mode)
@@ -162,6 +181,7 @@
 		evil-undo-system 'undo-tree)
   :config
   (add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
+  (evil-set-initial-state 'simple-mpc-mode 'emacs)
   (evil-mode 1))
 
 (use-package evil-collection
@@ -208,13 +228,14 @@
         company-lsp-enable-snippet nil)
   :config
   (setq company-minimum-prefix-length 1
-        company-idle-delay 0
+        company-idle-delay 0.1
         company-tooltip-idle-delay 1
         company-require-match nil
         company-tooltop-align-annotations t
         company-transformers '(company-sort-by-occurrence)
-        company-quickhelp-delay 0
-        company-backends '(company-capf company-keywords company-files company-ispell)
+        company-quickhelp-delay 0.1
+        company-backends '(company-capf company-files)
+		company-frontends '(coimpany-preview-frontend)
         company-show-quick-access t)
   (company-tng-configure-default)
   :hook
@@ -243,42 +264,31 @@
   :ensure t
   :demand
   :config
-  (centaur-tabs-headline-match)
   (centaur-tabs-mode t)
+  (setq centaur-tabs-close-button "")
+  (set-face-background 'centaur-tabs-active-bar-face "#5E81AC")
+  (set-face-background 'centaur-tabs-default "#3b4252")
+  (set-face-background 'centaur-tabs-unselected "#3b4252")
+  (set-face-background 'centaur-tabs-unselected-modified "#3b4252")
+  (set-face-background 'centaur-tabs-selected "#2e3440")
+  (centaur-tabs-headline-match)
   :custom
-  ((centaur-tabs-style "bar")
-   (centaur-tabs-height 32)
+  ((centaur-tabs-style "wave")
+   (centaur-tabs-height 25)
    (centaur-tabs-set-icons t)
    (centaur-tabs-plain-icons t)
-   (centaur-tabs-set-bar 'under)
+   (centaur-tabs-set-bar nil)
    (x-underline-at-descent-line t)
    (centaur-tabs-set-modified-marker t)
-   (centaur-tabs-modified-marker "~"))
-  :hook
-  (dired-mode . centaur-tabs-local-mode)
-  (dashboard-mode . centaur-tabs-local-mode)
-  (helpful-mode . centaur-tabs-local-mode)
+   (centaur-tabs-label-fixed-length 10)
+   (centaur-tabs-modified-marker ""))
+  ;; :hook
+  ;; (dired-mode . centaur-tabs-local-mode)
+  ;; (dashboard-mode . centaur-tabs-local-mode)
+  ;; (helpful-mode . centaur-tabs-local-mode)
   :bind
   (("<C-S-iso-lefttab>" . centaur-tabs-backward)
    ("C-<tab>" . centaur-tabs-forward)))
-
-(use-package helm-make
-  :ensure t
-  :config
-  (setq helm-make-comint t
-		helm-make-projectile t
-		helm-make-fuzzy-matching t)
-  :bind
-  (("C-c b" . helm-make-projectile)))
-
-(use-package org-roam
-  :ensure t
-  :init (setq org-roam-v2-ack t):custom
-  (org-roam-directory "~/Roam")
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)):config
-  (org-roam-setup))
 
 (use-package org-bullets
   :ensure t
@@ -344,16 +354,13 @@
 		dashboard-items '((recents . 15) (projects . 10))
 		dashboard-set-heading-icons t
 		dashboard-set-file-icons t
-		dashboard-banner-logo-title "gentleman"
+		dashboard-banner-logo-title ""
 		dashboard-set-init-info t
 		dashboard-set-footer nil
 		initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (add-hook 'dashboard-mode-hook 'variable-pitch-mode))
 
 (use-package all-the-icons
-  :ensure t)
-
-(use-package doom-modeline
   :ensure t)
 
 (use-package projectile
@@ -366,13 +373,6 @@
 (use-package vterm
   :ensure t
   :defer t)
-
-(use-package magit
-  :ensure t
-  :after evil-collection)
-
-(use-package selectric-mode
-  :ensure t)
 
 (use-package rainbow-mode
   :ensure t
@@ -387,14 +387,22 @@
   (prescient-persist-mode +1)
   (hotfuzz-selectrum-mode +1))
 
-(use-package paradox
-  :config
-  (paradox-enable))
+(use-package simple-mpc
+  :ensure t)
 
-(xterm-mouse-mode 1)
+(use-package telephone-line
+  :ensure t
+  :config
+  (set-face-background 'telephone-line-evil-insert "#A3BE8C")
+  (set-face-background 'telephone-line-evil-visual "#D08770")
+  (set-face-background 'telephone-line-evil-normal "#BF616A")
+  (set-face-background 'telephone-line-evil-replace "#EBCB8B")
+  (set-face-foreground 'telephone-line-projectile "#5E81AC")
+  (telephone-line-mode))
 
 
 ;; My custom functions
+
 
 ;; Keybinds
 (global-set-key (kbd "C-c C-c")
