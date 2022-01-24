@@ -1,7 +1,7 @@
 Emacs.useXIM: off
 
-XTerm*faceName: MesloLGS NF:size=12
-UXTerm*faceName: MesloLGS NF:size=12
+XTerm*faceName: FiraCode Nerd Font:size=13
+UXTerm*faceName: FiraCode Nerd Font:size=13
 
 XTerm*selectToClipboard: true
 UXTerm*selectToClipboard: true
@@ -19,6 +19,21 @@ UXTerm*.alternateScroll: true
 
 XTerm.vt100.metaSendsEscape: true
 UXTerm.vt100.metaSendsEscape: true
+
+xterm*directColor: true
+XTerm*allowTcapOps: true
+XTerm*disallowedTcapOps:
+XTerm*decGraphicsID: 340
+XTerm*decTerminalID: 420
+XTerm*numColorRegisters: 256
+XTerm*sixelScrolling: true
+UXterm*directColor: true
+UXTerm*allowTcapOps: true
+UXTerm*disallowedTcapOps:
+UXTerm*decGraphicsID: 340
+UXTerm*decTerminalID: 420
+UXTerm*numColorRegisters: 256
+UXTerm*sixelScrolling: true
 
 #define nord0 #2E3440
 #define nord1 #3B4252
