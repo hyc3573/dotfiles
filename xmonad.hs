@@ -229,7 +229,7 @@ main = xmonad $ fullscreenSupportBorder $ ewmh $ kdeConfig
     , ("M-x g r", spawn "~/.config/i3/scripts/ocr_trans.sh")
     , ("M-x x", spawn "rofi -show drun -show-icons" )
     , ("M-x c", spawn "rofi -show calc -modi calc -no-show-match -no-sort")
-    , ("M-x b", spawn "brave")
+    , ("M-x b", spawn "firefox")
     , ("M-x d", spawn "dolphin")
     , ("M-x e", spawn "emacsclient -c")
     , ("M-x m", spawn "multimc")
