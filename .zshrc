@@ -1,5 +1,4 @@
-sleep 0.5
-neofetch
+pfetch
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -58,6 +57,7 @@ distributions are really distributions of GNU/Linux."
 
 export PATH=$PATH:/home/yuchan/.local/bin
 alias rm='rm -i'
+alias cht='cht.sh'
 alias mpvs='mpv --vo=sixel --really-quiet'
 alias vim='nvim'
 alias enw='emacsclient -nw'
