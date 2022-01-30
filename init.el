@@ -44,10 +44,11 @@
  '(nord-uniform-mode-lines t)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(nano nano-theme doom-themes spaceline telephone-line smart-mode-line-powerline-theme simple-mpc paradox hotfuzz selectrum-prescient selectrum smex fira-code-mode chess rainbow-mode vimish-fold gdscript-mode xkcd suggest symon selectric-mode pacmacs magit icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(company-posframe nano nano-theme doom-themes spaceline telephone-line smart-mode-line-powerline-theme simple-mpc paradox hotfuzz selectrum-prescient selectrum smex fira-code-mode chess rainbow-mode vimish-fold gdscript-mode xkcd suggest symon selectric-mode pacmacs magit icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
  '(safe-local-variable-values
-   '((projectile-project-name . sfpc)
+   '((projectile-project-name . "GL")
+	 (projectile-project-name . sfpc)
 	 (projectile-project-run-cmd . "./main")
 	 (projectile-project-compilation-cmd . "make")
 	 (projectile-project-run-cmd . \./GL)
@@ -197,6 +198,7 @@
   (setq lsp-keymap-prefix "C-c l")
   :config
   (setq lsp-enable-snpippet nil
+		lsp-ui-doc-show-with-mouse nil
 		lsp-signature-doc-lines 2
 		lsp-lens-enable nil)
   :hook
