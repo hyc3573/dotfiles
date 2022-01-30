@@ -82,7 +82,6 @@ myLayout = lessBorders Never $ minimize $ BW.boringWindows $ tall ||| grid ||| f
 
 myStartupHook = do
   spawn "picom -bc"
-  spawn "sleep 1; ~/.config/polybar/launch.sh"
   spawn "setxkbmap -option caps:escape"
   modify $ \xstate -> xstate { windowset = onlyOnScreen 1 "1_1" (windowset xstate) }
 
