@@ -4,7 +4,7 @@ return {
 	font = wezterm.font("FiraCode Nerd Font"),
 	use_ime = true,
 	enable_tab_bar = false,
-	window_background_opacity = 0.5,
+	window_background_opacity = 0.8,
 	check_for_updates = false,
 	skip_close_confirmation_for_processes_named = {
 		"bash", "sh", "zsh", "fish", "tmux", "vim", "emacsclient", "emacs"
