@@ -1,4 +1,4 @@
-pfetch
+pfetch | lolcat -F 1
 
 source ~/Git/znap/zsh-snap/znap.zsh
 
@@ -8,9 +8,9 @@ export PATH=/home/yuchan/.local/bin:/home/yuchan/.ghcup/ghc/8.10.7/bin:/home/yuc
 
 export ZSH="/home/yuchan/.oh-my-zsh"
 
-ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 
-plugins=(git fzf zsh-syntax-highlighting)
+plugins=(zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
