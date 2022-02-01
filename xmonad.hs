@@ -185,7 +185,7 @@ main :: IO()
 main = xmonad $ fullscreenSupportBorder $ ewmh $ kdeConfig
     { modMask = mod4Mask
     , manageHook = manageHook kdeConfig <+> myManageHook
-    , terminal = "wezterm"
+    , terminal = "contour"
     , borderWidth = 2
     , normalBorderColor = "#2e3440"
     , focusedBorderColor = "#81a1c1"
@@ -233,7 +233,7 @@ main = xmonad $ fullscreenSupportBorder $ ewmh $ kdeConfig
     , ("M-x e", spawn "emacsclient -c")
     , ("M-x m", spawn "multimc")
     , ("M-x s", spawn "systemsettings5")
-    , ("M-x t", spawn "wezterm")
+    , ("M-x t", spawn "contour")
     , ("M-x h", spawn "multimc -l 1.8.9")
     , ("M-v", do
           windows $ withWspOnScreen 0 W.view
