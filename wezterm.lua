@@ -10,5 +10,6 @@ return {
 		"bash", "sh", "zsh", "fish", "tmux", "vim", "emacsclient", "emacs"
 	},
 	window_padding = {top = "1cell", left = "1cell", right = "0cell", bottom = "0cell"},
-	term = "xterm-24bit"
+	term = "xterm-24bit",
+	warn_about_missing_glyphs=false
 }

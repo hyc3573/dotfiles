@@ -1,18 +1,15 @@
-pfetch | lolcat -F 1
+[ -z "$TMUX"  ] && { exec tmux new-session;}
+
+pfetch
+
+alias ls='ls --color=tty'
 
 source ~/Git/znap/zsh-snap/znap.zsh
 
-znap source marlonrichert/zsh-autocomplete
-
-export PATH=/home/yuchan/.local/bin:/home/yuchan/.ghcup/ghc/8.10.7/bin:/home/yuchan/.ghcup/bin:$HOME/bin:/usr/local/bin:$HOME/Scripts:$PATH
-
-export ZSH="/home/yuchan/.oh-my-zsh"
+#znap source marlonrichert/zsh-autocomplete
+source ~/Git/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
 # ENABLE_CORRECTION="true"
-
-plugins=(zsh-syntax-highlighting)
-
-source $ZSH/oh-my-zsh.sh
 
 zstyle ':autocomplete:tab:*' fzf yes
 zstyle ':autocomplete:tab:*' insert-unambiguous yes
@@ -46,7 +43,6 @@ normally used in combination with the GNU operating system: the whole system
 is basically GNU with Linux added, or GNU/Linux.  All the so-called \"Linux\"
 distributions are really distributions of GNU/Linux."
 
-export PATH=$PATH:/home/yuchan/.local/bin
 alias rm='rm -i'
 alias cht='cht.sh'
 alias :e='enw'
@@ -57,18 +53,16 @@ alias enw='emacsclient -nw -c'
 alias emacs='emacsclient -c'
 alias ere='systemctl --user restart emacs'
 alias addm='yt-dlp --extract-audio -o "~/Musics/%(title)s.%(ext)s"'
+alias fuck='setxkbmap -option caps:escape'
 
 [ -f "/home/yuchan/.ghcup/env" ] && source "/home/yuchan/.ghcup/env" # ghcup-env
 
 # ZSH_THEME="typewritten" # set by `omz`
 
-export CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
-export CABAL_DIR="$XDG_CACHE_HOME"/cabal
-export CARGO_HOME="$XDG_DATA_HOME"/cargo
-export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
-export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
-export KDEHOME="$XDG_CONFIG_HOME"/kde
-export EDITOR='emacsclient'
+
+export EDITOR='editor'
+export LANG='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
 
 setopt auto_pushd
 setopt PUSHDSILENT
@@ -76,3 +70,8 @@ setopt PUSHDSILENT
 fpath=($fpath "/home/yuchan/.zfunctions")
 
 eval "$(starship init zsh)"
+
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

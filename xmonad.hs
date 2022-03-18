@@ -81,7 +81,7 @@ myLayout = lessBorders Never $ minimize $ BW.boringWindows $ tall ||| grid ||| f
         subTall = Tall 1 (3/100) (1/2)
 
 myStartupHook = do
-  spawn "picom -bc"
+  spawn "picom -bc > /tmp/picom.log 2>&1"
   spawn "setxkbmap -option caps:escape"
   modify $ \xstate -> xstate { windowset = onlyOnScreen 1 "1_1" (windowset xstate) }
 
@@ -185,7 +185,7 @@ main :: IO()
 main = xmonad $ fullscreenSupportBorder $ ewmh $ kdeConfig
     { modMask = mod4Mask
     , manageHook = manageHook kdeConfig <+> myManageHook
-    , terminal = "contour"
+    , terminal = "alacritty"
     , borderWidth = 2
     , normalBorderColor = "#2e3440"
     , focusedBorderColor = "#81a1c1"
@@ -233,7 +233,7 @@ main = xmonad $ fullscreenSupportBorder $ ewmh $ kdeConfig
     , ("M-x e", spawn "emacsclient -c")
     , ("M-x m", spawn "multimc")
     , ("M-x s", spawn "systemsettings5")
-    , ("M-x t", spawn "contour")
+    , ("M-x t", spawn "alacritty")
     , ("M-x h", spawn "multimc -l 1.8.9")
     , ("M-v", do
           windows $ withWspOnScreen 0 W.view

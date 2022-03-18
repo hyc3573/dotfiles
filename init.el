@@ -8,7 +8,7 @@
 ;; |______/|__/  |__/|__/   \___/ |__/ \_______/|__/
 
 
-(setq gc-cons-threshold (* 50 1000 1000))
+(setq gc-cons-threshold most-positive-fixnum)
 (setq read-process-output-max (* 1024 1024))
 
 ;; Init
@@ -36,47 +36,59 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
+   '("1704976a1797342a1b4ea7a75bdbb3be1569f4619134341bd5a4c1cfb16abad4" "37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
+ '(flycheck-cppcheck-checks '("all"))
+ '(flycheck-cppcheck-inconclusive t)
  '(global-display-line-numbers-mode nil)
  '(helm-minibuffer-history-key "M-p")
  '(highlight-indent-guides-method 'fill)
+ '(indent-tabs-mode nil)
  '(menu-bar-mode nil)
  '(nord-uniform-mode-lines t)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(yaml-mode company-posframe nano nano-theme doom-themes spaceline telephone-line smart-mode-line-powerline-theme simple-mpc paradox hotfuzz selectrum-prescient selectrum smex fira-code-mode chess rainbow-mode vimish-fold gdscript-mode xkcd suggest symon selectric-mode pacmacs magit icomplete-vertical vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip highlight-indent-guides flycheck i3wm-config-mode good-scroll smooth-scroll poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org doom-modeline all-the-icons evil-collection nord-theme which-key tron-legacy-theme powerline-evil powerline treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens rainbow-delimiters taskrunner async-await helm-taskswitch dap-mode helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(org emmet-mode rainbow-mode flycheck-clang-tidy rustic pyvenv yaml-mode company-posframe doom-themes telephone-line simple-mpc hotfuzz selectrum-prescient selectrum fira-code-mode chess vimish-fold gdscript-mode suggest symon selectric-mode vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip flycheck poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org all-the-icons evil-collection nord-theme which-key treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens taskrunner async-await helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
  '(safe-local-variable-values
-   '((projectile-project-name . "GL")
-	 (projectile-project-name . sfpc)
-	 (projectile-project-run-cmd . "./main")
-	 (projectile-project-compilation-cmd . "make")
-	 (projectile-project-run-cmd . \./GL)
-	 (projectile-project-compilation-cmd . make)
-	 (projectile-project-name . GL)
-	 (projectile-project-run-cmd . "./GL")
-	 (projectile-project-run-cmd . "cd build && ./a")
-	 (projectile-project-run-cmd . "cd build && ./path_tracing")
-	 (projectile-project-run-cmd . "runghc main.hs")
-	 (projectile-project-run-cmd . "ghc -e main.hs")
-	 (projectile-project-run-cmd . "ghci main.hs")
-	 (projectile-project-run-cmd . "cd ~/Project/dongari && ./main.py")
-	 (projectile-project-run-cmd . "./main.py")
-	 (projectile-project-run-cmd . "cd build && ./raytracer")
-	 (projectile-project-run-cmd . "cd build && ./LearnOpenGL")))
+   '((projectile-project-run-cmd . "make run")
+     (projectile-project-run-cmd . "alacritty -e ./text_editor")
+     (projectile-project-name . "text_editor")
+     (projectile-project-run-cmd . "./text_editor")
+     (projectile-project-name . "raytracing")
+     (projectile-project-run-cmd . "./raytracing")
+     (projectile-project-name . "Physics")
+     (projectile-project-run-cmd . "./Physics")
+     (projectile-project-run-cmd . "./main.hs")
+     (projectile-project-name . "GL")
+     (projectile-project-name . sfpc)
+     (projectile-project-run-cmd . "./main")
+     (projectile-project-compilation-cmd . "make")
+     (projectile-project-run-cmd . \./GL)
+     (projectile-project-compilation-cmd . make)
+     (projectile-project-name . GL)
+     (projectile-project-run-cmd . "./GL")
+     (projectile-project-run-cmd . "cd build && ./a")
+     (projectile-project-run-cmd . "cd build && ./path_tracing")
+     (projectile-project-run-cmd . "runghc main.hs")
+     (projectile-project-run-cmd . "ghc -e main.hs")
+     (projectile-project-run-cmd . "ghci main.hs")
+     (projectile-project-run-cmd . "cd ~/Project/dongari && ./main.py")
+     (projectile-project-run-cmd . "./main.py")
+     (projectile-project-run-cmd . "cd build && ./raytracer")
+     (projectile-project-run-cmd . "cd build && ./LearnOpenGL")))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(vterm-use-vterm-prompt-detection-method t)
  '(warning-suppress-log-types
    '(((fira-code-ligatures))
-	 ((fira-code-ligatures))
-	 ((fira-code-ligatures))
-	 ((fira-code-ligatures))))
+     ((fira-code-ligatures))
+     ((fira-code-ligatures))
+     ((fira-code-ligatures))))
  '(warning-suppress-types
    '(((fira-code-ligatures))
-	 ((fira-code-ligatures))
-	 ((fira-code-ligatures))
-	 ((fira-code-ligatures)))))
+     ((fira-code-ligatures))
+     ((fira-code-ligatures))
+     ((fira-code-ligatures)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -95,10 +107,11 @@
 						  :height 130)
 	  (set-fontset-font t
 						'hangul
-						(font-spec :name "NanumGothicCoding")))))
+						(font-spec :name "NanumGothicCoding"))
+	  (global-set-key (kbd "<mode-line> <down-mouse-1>") 'mouse-drag-mode-line))))
 
 (my-frame-config (selected-frame))
-(add-hook 'after-make-frame-functions 'my-frame-config)
+(add-hook 'after-make-frame-functions #'my-frame-config)
 
 ;; (use-package doom-themes
 ;;   :ensure t
@@ -139,7 +152,9 @@
 	  display-line-numbers-current-absolute t
 	  display-line-numbers-type 'relative
 	  scroll-step 1
-	  scroll-conservatively 10000)
+	  scroll-conservatively 0
+	  fcitx-remote-command "fcitx5-remote"
+      )
 
 (setq-default tab-width 4)
 (defvaralias 'c-basic-offset 'tab-width)
@@ -154,20 +169,24 @@
 
 (show-paren-mode 0)
 (global-hl-line-mode +1)
-(xterm-mouse-mode 1)
+(xterm-mouse-mode)
 
 
 ;; Hooks
-(add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
-(add-hook 'emacs-lisp-mode-hook #'highlight-indent-guides-mode)
 (add-hook 'org-mode-hook #'prettify-symbols-mode)
 ;; (add-hook 'after-init-hook #'doom-modeline-mode)
 (add-hook 'prog-mode-hook #'show-smartparens-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'emacs-lisp-mode-hook #'display-line-numbers-mode)
+(add-hook 'text-mode-hook #'(lambda () (setq indent-tabs-mode nil)))
 
 
 ;; Use-packages
+;; (use-package color-theme-approximate
+;;   :ensure t
+;;   :config
+;;   (color-theme-approximate-on))
+
 (use-package undo-tree
   :ensure t
   :config
@@ -181,12 +200,14 @@
   (setq evil-want-keybinding nil evil-want-integration t
 		evil-undo-system 'undo-tree)
   :config
-  (add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
+  (add-hook 'evil-local-mode-hook #'turn-on-undo-tree-mode)
   (evil-set-initial-state 'simple-mpc-mode 'emacs)
-  (evil-mode 1))
+  (evil-mode 1)
+  (add-hook 'evil-insert-state-exit-hook #'(lambda () (interactive) (call-process "fcitx5-remote" nil nil nil "-c"))))
 
 (use-package evil-collection
   :ensure t
+  :defer t
   :after evil
   :custom 
   (evil-collection-setup-minibuffer t)
@@ -207,6 +228,7 @@
    (python-mode . lsp)
    (haskell-mode . lsp)
    (haskell-literate-mode . lsp)
+   (rust-mode . lsp)
    (lsp-mode . lsp-enable-which-key-integration))
   :commands
   lsp)
@@ -222,6 +244,12 @@
 (use-package lsp-treemacs
   :ensure t
   :commands lsp-treemacs-errors-list)
+
+(use-package flycheck-clang-tidy
+  :ensure t
+  :after flycheck lsp-mode
+  :hook ((flycheck-mode . flycheck-clang-tidy-setup)
+         (c-mode-common . (lambda () (flycheck-add-next-checker 'lsp 'c/c++-clang-tidy)))))
 
 (use-package company
   :ensure t
@@ -251,14 +279,14 @@
 (use-package smartparens
   :ensure t
   :defer t
-  :hook
-  ((c++-mode . smartparens-mode)
-   (python-mode . smartparens-mode)
-   (emacs-lisp-mode . smartparens-mode)
-   (haskell-mode . smartparens-mode)
-   (c-mode . smartparens-mode)
-   (org-mode . smartparens-mode))
-  :init
+  :config
+  (add-hook 'prog-mode-hook #'smartparens-mode)
+  (setq sp-python-insert-colon-in-function-definitions nil)
+  (sp-local-pair 'prog-mode "{" nil :post-handlers '(("||\n[i]" "RET")))
+  (sp-local-pair 'prog-mode "[" nil :post-handlers '(("||\n[i]" "RET")))
+  (sp-local-pair 'prog-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
+  (sp-local-pair 'prog-mode "\"" nil :post-handlers '(("||\n[i]" "RET")))
+  (sp-local-pair 'prog-mode "'" nil :post-handlers '(("||\n[i]" "RET")))
   (require 'smartparens-config)
 )
 
@@ -306,7 +334,7 @@
   (setq org-confirm-babel-evaluate nil
 		org-startup-with-inline-images t
 		org-log-dont t
-		org-agenda-files '("~/notes.org" "~/tasks.org")
+		org-agenda-files '("~/Documents/notes.org" "~/Documents/tasks.org")
 		org-startup-indented t
 		org-tag-alist '(("@학교" . ?s)
 						("@집" . ?f)
@@ -360,7 +388,7 @@
 		dashboard-set-init-info t
 		dashboard-set-footer nil
 		initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  (add-hook 'dashboard-mode-hook 'variable-pitch-mode))
+  (add-hook 'dashboard-mode-hook #'variable-pitch-mode))
 
 (use-package all-the-icons
   :ensure t)
@@ -378,8 +406,9 @@
 
 (use-package rainbow-mode
   :ensure t
-  :hook
-  (text . rainbow-mode))
+  :defer t
+  :config
+  (add-hook 'text-mode-hook #'rainbow-mode))
 
 (use-package selectrum
   :ensure t
@@ -390,6 +419,7 @@
   (hotfuzz-selectrum-mode +1))
 
 (use-package simple-mpc
+  :defer t
   :ensure t)
 
 (use-package telephone-line
@@ -402,8 +432,49 @@
   (set-face-foreground 'telephone-line-projectile "#5E81AC")
   (telephone-line-mode))
 
+(use-package emmet-mode
+  :ensure t)
+
+;; (require 'fcitx)
+;; (fcitx-aggressive-setup)
+
+;; (use-package web-mode
+;;   :ensure t
+;;   :config
+;;   (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))(add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+;;   (add-hook 'web-mode-before-auto-complete-hooks 'company-mode-hook)
+;;   (add-hook 'web-mode 'emmet-mode)
+;;   (setq web-mode-enable-auto-pairing t
+;; 		web-mode-enable-css-colorization t))
+
 
 ;; My custom functions
+(defun tmux-navigate (direction)
+  (interactive)
+  (let
+    ((cmd (concat "windmove-" direction)))
+      (condition-case nil
+          (funcall (read cmd))
+        (error
+          (tmux-command direction)))))
+
+(defun tmux-command (direction)
+  (shell-command-to-string
+    (concat "tmux select-pane -"
+      (tmux-direction direction))))
+
+(defun tmux-direction (direction)
+  (upcase
+    (substring direction 0 1)))
 
 
 ;; Keybinds
@@ -421,18 +492,24 @@
 				nil)
 
 (global-set-key (kbd "M-h")
-                'windmove-left)
+                (lambda ()
+				  (interactive)
+				  (tmux-navigate "left")))
 (global-set-key (kbd "M-l")
-                'windmove-right)
+                (lambda ()
+				  (interactive)
+				  (tmux-navigate "right")))
 (global-set-key (kbd "M-k")
-                'windmove-up)
+                (lambda ()
+				  (interactive)
+				  (tmux-navigate "up")))
 (global-set-key (kbd "M-j")
-                'windmove-down)
-(global-set-key (kbd "M-p")
-                'ace-window)
+				(lambda ()
+				  (interactive)
+				  (tmux-navigate "down")))
 
-(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "s-p") #'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") #'projectile-command-map)
 
 ;; (global-set-key (kbd "<f5>")
 ;;                 (lambda ()
@@ -451,9 +528,25 @@
 ;;                   (interactive)
 ;;                   (run-make "build_and_test")))
 
-(global-set-key (kbd "<f5>") 'projectile-compile-project)
-(global-set-key (kbd "<f6>") 'projectile-run-project)
-(global-set-key (kbd "<f7>") 'projectile-test-project)
-(global-set-key (kbd "<f8>") 'projectile-configure-project)
+;; (global-set-key (kbd "<f5>") (lambda () (interactive)
+;; 								(projectile-compile-project nil)
+;; 								(projectile-run-project nil)))
+(global-set-key (kbd "<f5>") (lambda ()
+							   (interactive)
+							   (let
+								   ((ccmd (projectile-compilation-command
+										   (projectile-compilation-dir)))
+									(rcmd (projectile-run-command
+										   (projectile-compilation-dir))))
+								 (if (and ccmd rcmd)
+									 (compile
+									  (format "%s && %s" ccmd rcmd) t)
+								   (compile (concat ccmd rcmd))))))
 
-(setq gc-cons-threshold (* 2 1000 1000))
+(global-set-key (kbd "<f6>") 'projectile-compile-project)
+(global-set-key (kbd "<f7>") 'projectile-run-project)
+(global-set-key (kbd "<f8>") 'projectile-test-project)
+
+(global-set-key (kbd "C-j") 'emmet-expand-line)
+
+(setq gc-cons-threshold (expt 2 23))

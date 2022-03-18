@@ -1,21 +1,23 @@
 let mapleader = " "
 
 set nocompatible              " be iMproved, required
-filetype off                  " required
+filetype indent on
+filetype plugin indent on
 set encoding=utf-8
 set autoindent
 set cindent
-set smartindent
+set ai
 set wrap
 set nowrapscan
 set nobackup
 set noswapfile
 set ruler
 set shiftwidth=4
-set nu
+set nu rnu
 set hls
 set ic
 set tabstop=4
+set expandtab
 set lbr
 set incsearch
 set cursorline
@@ -26,7 +28,7 @@ set history=1000
 highlight Comment term=bold cterm=bold ctermfg=4
 set mouse=a
 set mousemodel=popup_setpos
-set t_Co=256
+set termguicolors
 set encoding=utf-8
 set wildmenu
 set clipboard=unnamedplus
@@ -35,15 +37,29 @@ set undofile
 
 let g:C_Ctrl_j = 'off'
 
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
 
-tnoremap <C-h> <C-w>h
-tnoremap <C-j> <C-w>j
-tnoremap <C-k> <C-w>k
-tnoremap <C-l> <C-w>l
+tnoremap <A-h> <C-w>h
+tnoremap <A-j> <C-w>j
+tnoremap <A-k> <C-w>k
+tnoremap <A-l> <C-w>l
+
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <A-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <A-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <A-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <A-l> :TmuxNavigateRight<cr>
+nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
+
+tnoremap <silent> <A-h> :TmuxNavigateLeft<cr>
+tnoremap <silent> <A-j> :TmuxNavigateDown<cr>
+tnoremap <silent> <A-k> :TmuxNavigateUp<cr>
+tnoremap <silent> <A-l> :TmuxNavigateRight<cr>
+tnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
 
 set rtp+=~/.vim/bundle/Vundle.vim
 
@@ -52,7 +68,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'hdima/python-syntax'
 Plugin 'scrooloose/nerdtree'
-Plugin 'ycm-core/YouCompleteMe'
+"Plugin 'ycm-core/YouCompleteMe'
 "Plugin 'neoclide/coc.nvim'
 Plugin 'raimondi/delimitmate'
 "Plugin 'tmhedberg/SimpylFold'
@@ -75,7 +91,7 @@ Plugin 'skywind3000/asynctasks.vim'
 Plugin 'dense-analysis/ale'
 Plugin 'doums/darcula'
 Plugin 'Shougo/vimproc.vim'
-Plugin 'puremourning/vimspector'
+"Plugin 'puremourning/vimspector'
 "Plugin 'wfxr/minimap.vim'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'liuchengxu/vim-which-key'
@@ -84,6 +100,16 @@ Plugin 'glepnir/dashboard-nvim'
 Plugin 'nvim-telescope/telescope.nvim'
 Plugin 'nvim-lua/plenary.nvim'
 Plugin 'arcticicestudio/nord-vim'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'neovim/nvim-lspconfig'
+Plugin 'ms-jpq/coq_nvim', {'branch': 'coq'}
+Plugin 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
+Plugin 'ms-jpq/coq.thirdparty', {'branch': '3p'}
+"Plugin 'hrsh7th/cmp-nvim-lsp'
+"Plugin 'hrsh7th/cmp-buffer'
+"Plugin 'hrsh7th/cmp-path'
+"Plugin 'hrsh7th/cmp-cmdline'
+"Plugin 'hrsh7th/nvim-cmp'
 
 call vundle#end()
 
@@ -102,8 +128,8 @@ au BufNewFile, BufRead *.py
     \ set textwidth=79
     \ set expandtab
     \ set autoindent
-	\ set fileformat=unix
-	\ set encoding=utf-8 
+    \ set fileformat=unix
+    \ set encoding=utf-8 
 "python with virtualenv support
 python3 << EOF
 import os
@@ -119,13 +145,13 @@ syntax on
 set clipboard=unnamed
 
 let g:airline#extensions#tabline#enabled = 1
-		
+        
 inoremap jj <ESC>
 let g:jedi#completions_enabled = 0
 
 let g:ycm_semantic_triggers = {
-				\	'VimspectorPrompt,vim,zsh,erlang,perl,c,cpp,objcpp,lua,cs,javascript,d,python,perl6,scala,vb,elixir,go,php,objc,sh,ocaml,ruby,java,jsp': ['re!\w+'],
-				\}
+                \    'vim,zsh,erlang,perl,c,cpp,objcpp,lua,cs,javascript,d,python,perl6,scala,vb,elixir,go,php,objc,sh,ocaml,ruby,java,jsp': ['re!\w+'],
+                \}
 
 set pumheight=10
 let g:asyncrun_open=10
@@ -163,28 +189,7 @@ let g:ycm_show_diagnostics_ui = 0
 
 let g:ycm_add_preview_to_completeopt = "popup"
 
-let g:rooter_patterns = ['.projectroot']
 let g:rooter_silent_chdir = 0
-
-function LoadConf()
-	if len(FindRootDirectory()) != 0
-		let file = FindRootDirectory() . '/.Project.d/init.vim'
-		if filereadable(file)
-			exe 'source' file 
-		endif
-	endif
-endfunction
-
-autocmd VimEnter * call LoadConf()
-
-let g:asyncrun_open = 6
-let g:asyncrun_rootmarks = ['.projectroot']
-let g:asynctasks_term_pos = 'bottom'
-let g:asynctasks_config_name = '.Project.d/tasks.ini'
-
-nnoremap <silent> <F7> :AsyncTask build_and_run<cr>
-nnoremap <silent> <leader>r :AsyncTask build_and_run<cr>
-"nnoremap <silent> <F7> :VBGtoggleBreakpointThisLine<cr>
 
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -204,14 +209,11 @@ endfunction
 let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
 let g:asyncrun_runner.vimscript = function('s:vimscript_runner')
 
-let g:vimspector_enable_mappings = 'HUMAN'
-
 function RepositionNerdTree()
-	NERDTreeFocus
-	execute "normal! \<C-w>H"
-	vertical resize 30
+    NERDTreeFocus
+    execute "normal! \<C-w>H"
+    vertical resize 30
 endfunction
-autocmd User VimspectorUICreated call RepositionNerdTree()
 
 vmap <C-c> "+yi
 vmap <C-x> "+c
@@ -220,17 +222,17 @@ imap <C-v> <ESC>"+pa
 tmap <C-v> <C-W>"+
 
 let g:dashboard_custom_header = [
-			\'   ###    #     #                     #                            ######  ####### #     #',
-			\'    #     #     #  ####  ######      # #   #####   ####  #    #    #     #    #    #  #  #',
-			\'    #     #     # #      #          #   #  #    # #    # #    #    #     #    #    #  #  #',
-			\'    #     #     # #      #          #   #  #    # #    # #    #    #     #    #    #  #  #',
-			\'    #     #     #  ####  #####     #     # #    # #      ######    ######     #    #  #  #',
-			\'    #     #     #      # #         ####### #####  #      #    #    #     #    #    #  #  #',
-			\'    #     #     # #    # #         #     # #   #  #    # #    #    #     #    #    #  #  #',
-			\'   ###     #####   ####  ######    #     # #    #  ####  #    #    ######     #     ## ##',
-			\'',
-			\'',
-			\]
+            \'   ###    #     #                     #                            ######  ####### #     #',
+            \'    #     #     #  ####  ######      # #   #####   ####  #    #    #     #    #    #  #  #',
+            \'    #     #     # #      #          #   #  #    # #    # #    #    #     #    #    #  #  #',
+            \'    #     #     # #      #          #   #  #    # #    # #    #    #     #    #    #  #  #',
+            \'    #     #     #  ####  #####     #     # #    # #      ######    ######     #    #  #  #',
+            \'    #     #     #      # #         ####### #####  #      #    #    #     #    #    #  #  #',
+            \'    #     #     # #    # #         #     # #   #  #    # #    #    #     #    #    #  #  #',
+            \'   ###     #####   ####  ######    #     # #    #  ####  #    #    ######     #     ## ##',
+            \'',
+            \'',
+            \]
 
 let g:minimap_width = 15
 let g:minimap_auto_start = 1
@@ -252,32 +254,42 @@ set timeoutlen=0
 let g:rooter_manual_only = 1
 autocmd BufNew,TabNew,BufEnter,TabEnter * Rooter
 
+let g:coq_settings = { 'auto_start': v:true }
+
+set completeopt=menu,menuone,noselect
+
 lua << EOF
   require("project_nvim").setup {
     -- your configuration comes here
     -- or leave it empty to use the default settings
     -- refer to the configuration section below
-	patterns = {".projectroot"},
-	require('telescope').load_extension('projects'),
+    require('telescope').load_extension('projects'),
   }
+
+  require'lspconfig'.hls.setup{}
+  require'lspconfig'.clangd.setup{}
+  require'lspconfig'.pyright.setup{}
+  require'lspconfig'.rls.setup{}
+
+  
 EOF
 
 let g:dashboard_custom_section = {
-	\'recent_files' :{
-		\ 'description': [' Recent files                        SPC f h'],
-		\ 'command': 'DashboardFindHistory'},
-	\'projects' :{
-		\ 'description': [' Projects                              SPC p'],
-		\ 'command': 'Telescope projects'},
-	\'new_file' :{
-		\ 'description': [' New file                            SPC c n'],
-		\ 'command': 'DashboardNewFile'},
-	\'vimrc'    :{
-		\ 'description': [' .vimrc                              SPC e v'],
-		\ 'command': 'e ~/.vimrc'},
-	\'cpp'      :{
-		\ 'description': [' 20.cpp                              SPC e c'],
-		\ 'command': 'e ~/projects/20.cpp'}
+    \'recent_files' :{
+        \ 'description': [' Recent files                        SPC f h'],
+        \ 'command': 'DashboardFindHistory'},
+        \'projects' :{
+        \ 'description': [' Projects                              SPC p'],
+        \ 'command': 'Telescope projects'},
+    \'new_file' :{
+        \ 'description': [' New file                            SPC c n'],
+        \ 'command': 'DashboardNewFile'},
+    \'vimrc'    :{
+        \ 'description': [' .vimrc                              SPC e v'],
+        \ 'command': 'e ~/.vimrc'},
+    \'cpp'      :{
+        \ 'description': [' 20.cpp                              SPC e c'],
+        \ 'command': 'e ~/projects/20.cpp'}
 \ }
 
 let g:dashboard_default_executive = 'telescope'
