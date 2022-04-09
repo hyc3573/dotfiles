@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 ;;  /$$$$$$           /$$   /$$                  /$$
 ;; |_  $$_/          |__/  | $$                 | $$
 ;;   | $$   /$$$$$$$  /$$ /$$$$$$       /$$$$$$ | $$
@@ -27,7 +29,7 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
-;; b
+;; B
 (require 'use-package)
 (setq use-package-always-ensure t)
 (custom-set-variables
@@ -39,7 +41,6 @@
    '("1704976a1797342a1b4ea7a75bdbb3be1569f4619134341bd5a4c1cfb16abad4" "37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
  '(flycheck-cppcheck-checks '("all"))
  '(flycheck-cppcheck-inconclusive t)
- '(global-display-line-numbers-mode nil)
  '(helm-minibuffer-history-key "M-p")
  '(highlight-indent-guides-method 'fill)
  '(indent-tabs-mode nil)
@@ -47,10 +48,13 @@
  '(nord-uniform-mode-lines t)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(org emmet-mode rainbow-mode flycheck-clang-tidy rustic pyvenv yaml-mode company-posframe doom-themes telephone-line simple-mpc hotfuzz selectrum-prescient selectrum fira-code-mode chess vimish-fold gdscript-mode suggest symon selectric-mode vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip flycheck poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org all-the-icons evil-collection nord-theme which-key treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens taskrunner async-await helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(zoom speed-type xclip monkeytype iflipb frog-jump-buffer bug-hunter evil-args org emmet-mode rainbow-mode flycheck-clang-tidy rustic pyvenv yaml-mode company-posframe doom-themes telephone-line simple-mpc hotfuzz selectrum-prescient selectrum fira-code-mode chess vimish-fold gdscript-mode suggest symon selectric-mode vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip flycheck poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org all-the-icons evil-collection nord-theme which-key treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens taskrunner async-await helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
  '(safe-local-variable-values
-   '((projectile-project-run-cmd . "make run")
+   '((projectile-project-name . "PL")
+     (projectile-project-run-cmd . "./PL")
+     (projectile-project-run-cmd . "runghc ./main.hs")
+     (projectile-project-run-cmd . "make run")
      (projectile-project-run-cmd . "alacritty -e ./text_editor")
      (projectile-project-name . "text_editor")
      (projectile-project-run-cmd . "./text_editor")
@@ -88,7 +92,8 @@
    '(((fira-code-ligatures))
      ((fira-code-ligatures))
      ((fira-code-ligatures))
-     ((fira-code-ligatures)))))
+     ((fira-code-ligatures))))
+ '(zoom-size '(80 . 50)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -107,8 +112,7 @@
 						  :height 130)
 	  (set-fontset-font t
 						'hangul
-						(font-spec :name "NanumGothicCoding"))
-	  (global-set-key (kbd "<mode-line> <down-mouse-1>") 'mouse-drag-mode-line))))
+						(font-spec :name "NanumGothicCoding")))))
 
 (my-frame-config (selected-frame))
 (add-hook 'after-make-frame-functions #'my-frame-config)
@@ -123,6 +127,7 @@
 ;; configs
 (setq native-comp-async-report-warnings-errors nil
 	  tab-width 4
+      mouse-wheel-scroll-amount '(3 ((shift) . 10))
 	  indent-tabs-mode nil
 	  inhibit-startup-message t
       backup-by-copying t
@@ -152,9 +157,7 @@
 	  display-line-numbers-current-absolute t
 	  display-line-numbers-type 'relative
 	  scroll-step 1
-	  scroll-conservatively 0
-	  fcitx-remote-command "fcitx5-remote"
-      )
+	  scroll-conservatively 0)
 
 (setq-default tab-width 4)
 (defvaralias 'c-basic-offset 'tab-width)
@@ -170,14 +173,13 @@
 (show-paren-mode 0)
 (global-hl-line-mode +1)
 (xterm-mouse-mode)
-
+(recentf-mode 1)
+(global-display-line-numbers-mode)
 
 ;; Hooks
 (add-hook 'org-mode-hook #'prettify-symbols-mode)
 ;; (add-hook 'after-init-hook #'doom-modeline-mode)
 (add-hook 'prog-mode-hook #'show-smartparens-mode)
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(add-hook 'emacs-lisp-mode-hook #'display-line-numbers-mode)
 (add-hook 'text-mode-hook #'(lambda () (setq indent-tabs-mode nil)))
 
 
@@ -202,8 +204,8 @@
   :config
   (add-hook 'evil-local-mode-hook #'turn-on-undo-tree-mode)
   (evil-set-initial-state 'simple-mpc-mode 'emacs)
-  (evil-mode 1)
-  (add-hook 'evil-insert-state-exit-hook #'(lambda () (interactive) (call-process "fcitx5-remote" nil nil nil "-c"))))
+  (evil-mode 1))
+  ;; (add-hook 'evil-insert-state-exit-hook #'(lambda () (interactive) (call-process "ibus" nil nil nil "engine xkb:us::eng")))
 
 (use-package evil-collection
   :ensure t
@@ -290,35 +292,35 @@
   (require 'smartparens-config)
 )
 
-(use-package centaur-tabs
-  :ensure t
-  :demand
-  :config
-  (centaur-tabs-mode t)
-  (setq centaur-tabs-close-button "")
-  (set-face-background 'centaur-tabs-active-bar-face "#5E81AC")
-  (set-face-background 'centaur-tabs-default "#3b4252")
-  (set-face-background 'centaur-tabs-unselected "#3b4252")
-  (set-face-background 'centaur-tabs-unselected-modified "#3b4252")
-  (set-face-background 'centaur-tabs-selected "#2e3440")
-  (centaur-tabs-headline-match)
-  :custom
-  ((centaur-tabs-style "wave")
-   (centaur-tabs-height 25)
-   (centaur-tabs-set-icons t)
-   (centaur-tabs-plain-icons t)
-   (centaur-tabs-set-bar nil)
-   (x-underline-at-descent-line t)
-   (centaur-tabs-set-modified-marker t)
-   (centaur-tabs-label-fixed-length 10)
-   (centaur-tabs-modified-marker ""))
-  ;; :hook
-  ;; (dired-mode . centaur-tabs-local-mode)
-  ;; (dashboard-mode . centaur-tabs-local-mode)
-  ;; (helpful-mode . centaur-tabs-local-mode)
-  :bind
-  (("<C-S-iso-lefttab>" . centaur-tabs-backward)
-   ("C-<tab>" . centaur-tabs-forward)))
+;; (use-package centaur-tabs
+;;   :ensure t
+;;   :demand
+;;   :config
+;;   (centaur-tabs-mode t)
+;;   (setq centaur-tabs-close-button "")
+;;   (set-face-background 'centaur-tabs-active-bar-face "#5E81AC")
+;;   (set-face-background 'centaur-tabs-default "#3b4252")
+;;   (set-face-background 'centaur-tabs-unselected "#3b4252")
+;;   (set-face-background 'centaur-tabs-unselected-modified "#3b4252")
+;;   (set-face-background 'centaur-tabs-selected "#2e3440")
+;;   (centaur-tabs-headline-match)
+;;   :custom
+;;   ((centaur-tabs-style "wave")
+;;    (centaur-tabs-height 25)
+;;    (centaur-tabs-set-icons t)
+;;    (centaur-tabs-plain-icons t)
+;;    (centaur-tabs-set-bar nil)
+;;    (x-underline-at-descent-line t)
+;;    (centaur-tabs-set-modified-marker t)
+;;    (centaur-tabs-label-fixed-length 10)
+;;    (centaur-tabs-modified-marker ""))
+;;   ;; :hook
+;;   ;; (dired-mode . centaur-tabs-local-mode)
+;;   ;; (dashboard-mode . centaur-tabs-local-mode)
+;;   ;; (helpful-mode . centaur-tabs-local-mode)
+;;   :bind
+;;   (("<C-S-iso-lefttab>" . centaur-tabs-backward)
+;;    ("C-<tab>" . centaur-tabs-forward)))
 
 (use-package org-bullets
   :ensure t
@@ -432,8 +434,44 @@
   (set-face-foreground 'telephone-line-projectile "#5E81AC")
   (telephone-line-mode))
 
+(use-package evil-args
+  :ensure t
+  :config
+  ;; bind evil-args text objects
+  (define-key evil-inner-text-objects-map "a" 'evil-inner-arg)
+  (define-key evil-outer-text-objects-map "a" 'evil-outer-arg)
+
+  ;; bind evil-forward/backward-args
+  (define-key evil-normal-state-map "L" 'evil-forward-arg)
+  (define-key evil-normal-state-map "H" 'evil-backward-arg)
+  (define-key evil-motion-state-map "L" 'evil-forward-arg)
+  (define-key evil-motion-state-map "H" 'evil-backward-arg)
+
+  ;; bind evil-jump-out-args
+  (define-key evil-normal-state-map "K" 'evil-jump-out-args))
+
 (use-package emmet-mode
   :ensure t)
+
+(use-package frog-jump-buffer
+  :ensure t
+  :config
+  (global-set-key (kbd "C-c s") 'frog-jump-buffer)
+  (define-key evil-normal-state-map (kbd "SPC j") 'frog-jump-buffer))
+
+(use-package iflipb
+  :ensure t
+  :config
+  (global-set-key (kbd "C-c <tab>") 'iflipb-next-buffer)
+  (define-key evil-normal-state-map (kbd "SPC <tab>") 'iflipb-next-buffer))
+
+(use-package xclip
+  :config
+  (xclip-mode 1))
+
+(use-package zoom
+  :config
+  (zoom-mode))
 
 ;; (require 'fcitx)
 ;; (fcitx-aggressive-setup)
@@ -475,6 +513,17 @@
 (defun tmux-direction (direction)
   (upcase
     (substring direction 0 1)))
+
+(defun my-eww-readable-nonce ()
+  "Once-off call to `eww-readable' after EWW is done rendering."
+  (unwind-protect
+      (eww-readable)
+    (remove-hook 'eww-after-render-hook #'my-eww-readable-nonce)))
+
+(defun namu ()
+  (interactive)
+  (add-hook 'eww-after-render-hook #'my-eww-readable-nonce)
+  (eww (concat "namu.wiki/Search?q=" (read-string "Enter query: "))))
 
 
 ;; Keybinds
@@ -541,12 +590,10 @@
 								 (if (and ccmd rcmd)
 									 (compile
 									  (format "%s && %s" ccmd rcmd) t)
-								   (compile (concat ccmd rcmd))))))
+								   (compile (concat ccmd rcmd) t)))))
 
 (global-set-key (kbd "<f6>") 'projectile-compile-project)
 (global-set-key (kbd "<f7>") 'projectile-run-project)
 (global-set-key (kbd "<f8>") 'projectile-test-project)
 
 (global-set-key (kbd "C-j") 'emmet-expand-line)
-
-(setq gc-cons-threshold (expt 2 23))

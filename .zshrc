@@ -44,6 +44,7 @@ is basically GNU with Linux added, or GNU/Linux.  All the so-called \"Linux\"
 distributions are really distributions of GNU/Linux."
 
 alias rm='rm -i'
+alias usrctl='systemctl --user'
 alias cht='cht.sh'
 alias :e='enw'
 alias lf='lfrun'
