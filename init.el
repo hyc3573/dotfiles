@@ -48,10 +48,11 @@
  '(nord-uniform-mode-lines t)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(zoom speed-type xclip monkeytype iflipb frog-jump-buffer bug-hunter evil-args org emmet-mode rainbow-mode flycheck-clang-tidy rustic pyvenv yaml-mode company-posframe doom-themes telephone-line simple-mpc hotfuzz selectrum-prescient selectrum fira-code-mode chess vimish-fold gdscript-mode suggest symon selectric-mode vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip flycheck poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org all-the-icons evil-collection nord-theme which-key treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens taskrunner async-await helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(company-coq proof-general zoom speed-type xclip monkeytype iflipb frog-jump-buffer bug-hunter evil-args org emmet-mode rainbow-mode flycheck-clang-tidy rustic pyvenv yaml-mode company-posframe doom-themes telephone-line simple-mpc hotfuzz selectrum-prescient selectrum fira-code-mode chess vimish-fold gdscript-mode suggest symon selectric-mode vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip flycheck poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org all-the-icons evil-collection nord-theme which-key treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens taskrunner async-await helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
  '(safe-local-variable-values
-   '((projectile-project-name . "PL")
+   '((projectile-project-run-cmd . "python ./main.py")
+     (projectile-project-name . "PL")
      (projectile-project-run-cmd . "./PL")
      (projectile-project-run-cmd . "runghc ./main.hs")
      (projectile-project-run-cmd . "make run")
@@ -273,6 +274,7 @@
   :hook
   (emacs-lisp-mode . company-mode)
   (cmake-mode . company-mode)
+  (coq-mode . company-coq-mode)
   :bind
   ;; (:map company-active-map ("TAB" . company-complete-common-and-select-next-if-tooltip-visible-or-complete-selection))
   ;; (:map company-active-map ("<backtab>" . company-select-previous))
@@ -291,6 +293,10 @@
   (sp-local-pair 'prog-mode "'" nil :post-handlers '(("||\n[i]" "RET")))
   (require 'smartparens-config)
 )
+
+(use-package proof-general
+  :config
+  (add-hook 'coq-mode-hook (lambda () (undo-tree-mode 1))))
 
 ;; (use-package centaur-tabs
 ;;   :ensure t
