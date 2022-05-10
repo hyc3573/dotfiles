@@ -45,6 +45,7 @@ distributions are really distributions of GNU/Linux."
 
 alias rm='rm -i'
 alias usrctl='systemctl --user'
+alias remacs='usrctl restart emacs'
 alias cht='cht.sh'
 alias :e='enw'
 alias lf='lfrun'

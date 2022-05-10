@@ -9,3 +9,6 @@ export PATH=/home/yuchan/.local/bin:/home/yuchan/.ghcup/ghc/8.10.7/bin:/home/yuc
 export CONAN_USER_HOME="$XDG_CONFIG_HOME"
 export GOPATH="$XDG_DATA_HOME"/go
 
+xcape -t 300 -e "Hyper_L=Escape"
+
+export AWT_TOOLKIT=MToolkit

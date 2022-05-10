@@ -1,5 +1,4 @@
 ;; -*- lexical-binding: t -*-
-
 ;;  /$$$$$$           /$$   /$$                  /$$
 ;; |_  $$_/          |__/  | $$                 | $$
 ;;   | $$   /$$$$$$$  /$$ /$$$$$$       /$$$$$$ | $$
@@ -9,9 +8,9 @@
 ;;  /$$$$$$| $$  | $$| $$  |  $$$$//$$|  $$$$$$$| $$
 ;; |______/|__/  |__/|__/   \___/ |__/ \_______/|__/
 
-
 (setq gc-cons-threshold most-positive-fixnum)
 (setq read-process-output-max (* 1024 1024))
+(add-to-list 'load-path "~/.emacs.d/custom/")
 
 ;; Init
 (require 'package)
@@ -22,8 +21,8 @@
 						 ("elpa-devel" . "https://elpa.gnu.org/devel/")))
 
 (package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
+;; (unless package-archive-contents
+;;   (package-refresh-contents))
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
@@ -32,6 +31,20 @@
 ;; B
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -39,6 +52,8 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("1704976a1797342a1b4ea7a75bdbb3be1569f4619134341bd5a4c1cfb16abad4" "37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
+ '(evil-cleverparens-use-additional-bindings nil)
+ '(evil-cleverparens-use-additional-movement-keys nil)
  '(flycheck-cppcheck-checks '("all"))
  '(flycheck-cppcheck-inconclusive t)
  '(helm-minibuffer-history-key "M-p")
@@ -48,53 +63,11 @@
  '(nord-uniform-mode-lines t)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(package-selected-packages
-   '(company-coq proof-general zoom speed-type xclip monkeytype iflipb frog-jump-buffer bug-hunter evil-args org emmet-mode rainbow-mode flycheck-clang-tidy rustic pyvenv yaml-mode company-posframe doom-themes telephone-line simple-mpc hotfuzz selectrum-prescient selectrum fira-code-mode chess vimish-fold gdscript-mode suggest symon selectric-mode vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip flycheck poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org all-the-icons evil-collection nord-theme which-key treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens taskrunner async-await helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
+   '(cask package-build evil-tree-edit tree-edit puni command-log-mode helpful tree-sitter-langs evil-textobj-tree-sitter evil-text-object-python evil-cleverparens general evil-smartparens buffer-flip company-coq proof-general zoom speed-type xclip monkeytype iflipb frog-jump-buffer bug-hunter evil-args org emmet-mode rainbow-mode flycheck-clang-tidy rustic pyvenv yaml-mode company-posframe doom-themes telephone-line simple-mpc hotfuzz selectrum-prescient selectrum fira-code-mode chess vimish-fold gdscript-mode suggest symon selectric-mode vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip flycheck poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org all-the-icons evil-collection nord-theme which-key treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens taskrunner async-await helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
- '(safe-local-variable-values
-   '((projectile-project-run-cmd . "python ./main.py")
-     (projectile-project-name . "PL")
-     (projectile-project-run-cmd . "./PL")
-     (projectile-project-run-cmd . "runghc ./main.hs")
-     (projectile-project-run-cmd . "make run")
-     (projectile-project-run-cmd . "alacritty -e ./text_editor")
-     (projectile-project-name . "text_editor")
-     (projectile-project-run-cmd . "./text_editor")
-     (projectile-project-name . "raytracing")
-     (projectile-project-run-cmd . "./raytracing")
-     (projectile-project-name . "Physics")
-     (projectile-project-run-cmd . "./Physics")
-     (projectile-project-run-cmd . "./main.hs")
-     (projectile-project-name . "GL")
-     (projectile-project-name . sfpc)
-     (projectile-project-run-cmd . "./main")
-     (projectile-project-compilation-cmd . "make")
-     (projectile-project-run-cmd . \./GL)
-     (projectile-project-compilation-cmd . make)
-     (projectile-project-name . GL)
-     (projectile-project-run-cmd . "./GL")
-     (projectile-project-run-cmd . "cd build && ./a")
-     (projectile-project-run-cmd . "cd build && ./path_tracing")
-     (projectile-project-run-cmd . "runghc main.hs")
-     (projectile-project-run-cmd . "ghc -e main.hs")
-     (projectile-project-run-cmd . "ghci main.hs")
-     (projectile-project-run-cmd . "cd ~/Project/dongari && ./main.py")
-     (projectile-project-run-cmd . "./main.py")
-     (projectile-project-run-cmd . "cd build && ./raytracer")
-     (projectile-project-run-cmd . "cd build && ./LearnOpenGL")))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
- '(vterm-use-vterm-prompt-detection-method t)
- '(warning-suppress-log-types
-   '(((fira-code-ligatures))
-     ((fira-code-ligatures))
-     ((fira-code-ligatures))
-     ((fira-code-ligatures))))
- '(warning-suppress-types
-   '(((fira-code-ligatures))
-     ((fira-code-ligatures))
-     ((fira-code-ligatures))
-     ((fira-code-ligatures))))
- '(zoom-size '(80 . 50)))
+ '(vterm-use-vterm-prompt-detection-method t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -122,7 +95,6 @@
 ;;   :ensure t
 ;;   :config
 ;;   (load-theme 'doom-nord t))
-
 
 
 ;; configs
@@ -158,7 +130,8 @@
 	  display-line-numbers-current-absolute t
 	  display-line-numbers-type 'relative
 	  scroll-step 1
-	  scroll-conservatively 0)
+	  scroll-conservatively 0
+      comp-deffered-compilation t)
 
 (setq-default tab-width 4)
 (defvaralias 'c-basic-offset 'tab-width)
@@ -177,10 +150,14 @@
 (recentf-mode 1)
 (global-display-line-numbers-mode)
 
+(put 'projectile-project-compilation-cmd 'safe-local-variable #'stringp)
+(put 'projectile-project-run-cmd 'safe-local-variable #'stringp)
+
 ;; Hooks
 (add-hook 'org-mode-hook #'prettify-symbols-mode)
 ;; (add-hook 'after-init-hook #'doom-modeline-mode)
 (add-hook 'prog-mode-hook #'show-smartparens-mode)
+(add-hook 'emacs-lisp-mode-hook #'semantic-mode)
 (add-hook 'text-mode-hook #'(lambda () (setq indent-tabs-mode nil)))
 
 
@@ -195,7 +172,7 @@
   :config
   (global-undo-tree-mode)
   (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist (quote (("" . "~/.local/var/emacs/undo_hist")))))
+        undo-tree-history-directory-alist '(("" . "~/.local/var/emacs/undo_hist"))))
 
 (use-package evil
   :ensure t
@@ -205,6 +182,8 @@
   :config
   (add-hook 'evil-local-mode-hook #'turn-on-undo-tree-mode)
   (evil-set-initial-state 'simple-mpc-mode 'emacs)
+  (evil-set-initial-state 'comint-mode 'normal)
+  (evil-set-initial-state 'speed-type 'normal)
   (evil-mode 1))
   ;; (add-hook 'evil-insert-state-exit-hook #'(lambda () (interactive) (call-process "ibus" nil nil nil "engine xkb:us::eng")))
 
@@ -261,13 +240,13 @@
         company-lsp-enable-snippet nil)
   :config
   (setq company-minimum-prefix-length 1
-        company-idle-delay 0.1
+        company-idle-delay 0.001
         company-tooltip-idle-delay 1
         company-require-match nil
         company-tooltop-align-annotations t
         company-transformers '(company-sort-by-occurrence)
         company-quickhelp-delay 0.1
-        company-backends '(company-capf company-files)
+        company-backends '(company-capf company-files company-keywords company-yasnippet)
 		company-frontends '(coimpany-preview-frontend)
         company-show-quick-access t)
   (company-tng-configure-default)
@@ -284,13 +263,14 @@
   :ensure t
   :defer t
   :config
-  (add-hook 'prog-mode-hook #'smartparens-mode)
+  (add-hook 'prog-mode-hook #'smartparens-strict-mode)
   (setq sp-python-insert-colon-in-function-definitions nil)
   (sp-local-pair 'prog-mode "{" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'prog-mode "[" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'prog-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'prog-mode "\"" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'prog-mode "'" nil :post-handlers '(("||\n[i]" "RET")))
+  (add-hook 'smartparens-enabled-hook #'evil-cleverparens-mode)
   (require 'smartparens-config)
 )
 
@@ -341,6 +321,7 @@
   :config
   (setq org-confirm-babel-evaluate nil
 		org-startup-with-inline-images t
+        org-startup-truncated nil
 		org-log-dont t
 		org-agenda-files '("~/Documents/notes.org" "~/Documents/tasks.org")
 		org-startup-indented t
@@ -368,6 +349,7 @@
   (setq which-key-show-early-on-C-h t
 		which-key-idle-delay 0.1
 		which-key-idle-secondary-delay 0.05)
+  (which-key-setup-side-window-bottom)
   (which-key-mode))
 
 (use-package evil-org
@@ -440,22 +422,6 @@
   (set-face-foreground 'telephone-line-projectile "#5E81AC")
   (telephone-line-mode))
 
-(use-package evil-args
-  :ensure t
-  :config
-  ;; bind evil-args text objects
-  (define-key evil-inner-text-objects-map "a" 'evil-inner-arg)
-  (define-key evil-outer-text-objects-map "a" 'evil-outer-arg)
-
-  ;; bind evil-forward/backward-args
-  (define-key evil-normal-state-map "L" 'evil-forward-arg)
-  (define-key evil-normal-state-map "H" 'evil-backward-arg)
-  (define-key evil-motion-state-map "L" 'evil-forward-arg)
-  (define-key evil-motion-state-map "H" 'evil-backward-arg)
-
-  ;; bind evil-jump-out-args
-  (define-key evil-normal-state-map "K" 'evil-jump-out-args))
-
 (use-package emmet-mode
   :ensure t)
 
@@ -469,15 +435,115 @@
   :ensure t
   :config
   (global-set-key (kbd "C-c <tab>") 'iflipb-next-buffer)
+  (global-set-key (kbd "H-S-L") 'iflipb-next-buffer)
   (define-key evil-normal-state-map (kbd "SPC <tab>") 'iflipb-next-buffer))
 
 (use-package xclip
   :config
   (xclip-mode 1))
 
-(use-package zoom
+;; (use-package zoom
+;;   :config
+;;   (zoom-mode))
+
+(use-package buffer-flip
+  :ensure t
+  :bind  (("C-<tab>" . buffer-flip)
+          :map buffer-flip-map
+          ( "C-<tab>" .   buffer-flip-forward) 
+          ( "H-L" .   buffer-flip-forward) 
+          ( "<C-S-iso-lefttab>" . buffer-flip-backward) 
+          ( "H-H" . buffer-flip-backward) 
+          ( "M-ESC" .     buffer-flip-abort))
   :config
-  (zoom-mode))
+  (setq buffer-flip-skip-patterns
+        '("^\\*helm\\b"
+          "^\\*swiper\\*$")))
+
+(use-package general
+  :ensure t
+  :config
+  (general-evil-setup)
+  (general-nvmap :prefix "C-c"
+         :keymaps 'smartparens-mode-map
+         ">" '(sp-backward-barf-sexp :wk "Barf backward" :properties '(:repeat))
+         "<" '(sp-forward-barf-sexp :wk "Barf forward" :properties '(:repeat))
+         "(" '(sp-backward-slurp-sexp :wk "Slurp backward" :properties '(:repeat))
+         ")" '(sp-forward-slurp-sexp :wk "Slurp forward" :properties '(:repeat))
+         "}" '(sp-slurp-hybrid-sexp :wk "Slurp (hybrid)" :properties '(:repeat))
+         "+" '(sp-join-sexp :wk "Join")
+         "-" '(sp-split-sexp :wk "Split")
+         "a" '(sp-absorb-sexp :wk "Absorb")
+         "c" '(sp-clone-sexp :wk "Clone")
+         "C" '(sp-convolute-sexp :wk "Convolute")
+         "m" '(sp-mark-sexp :wk "Mark")
+         "r" '(sp-raise-sexp :wk "Raise")
+         "s" '(sp-splice-sexp-killing-around :wk "Splice")
+         "t" '(sp-transpose-sexp :wk "Transpose")
+         "T" '(sp-transpose-hybrid-sexp :wk "Transpose (hybrid)")
+         ;; Narrow and Widen, use default emacs for widening
+         "n" '(sp-narrow-to-sexp :wk "Narrow")))
+
+(use-package tree-sitter
+  :ensure t
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs
+  :ensure t)
+
+(use-package evil-textobj-tree-sitter
+  :ensure t
+  :config
+  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+  (define-key evil-inner-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
+  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
+  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
+  (define-key evil-outer-text-objects-map "b" (evil-textobj-tree-sitter-get-textobj "block.outer"))
+  (define-key evil-inner-text-objects-map "b" (evil-textobj-tree-sitter-get-textobj "block.inner"))
+
+  ;; Goto start of next function
+  (define-key evil-normal-state-map (kbd "]f") (lambda ()
+                                                 (interactive)
+                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer")))
+  ;; Goto start of previous function
+  (define-key evil-normal-state-map (kbd "[f") (lambda ()
+                                                 (interactive)
+                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
+  ;; Goto end of next function
+  (define-key evil-normal-state-map (kbd "]F") (lambda ()
+                                                 (interactive)
+                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
+  ;; Goto end of previous function
+  (define-key evil-normal-state-map (kbd "[F") (lambda ()
+                                                 (interactive)
+                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer" t t)))
+  
+  (global-tree-sitter-mode))
+
+(use-package helpful
+  :ensure t
+  :config
+  (global-set-key (kbd "C-h f") #'helpful-callable)
+  (global-set-key (kbd "C-h v") #'helpful-variable)
+  (global-set-key (kbd "C-h k") #'helpful-key)
+  (global-set-key (kbd "C-c C-d") #'helpful-at-point)
+  (global-set-key (kbd "C-h F") #'helpful-function)
+  (global-set-key (kbd "C-h C") #'helpful-command))
+
+(use-package tree-edit
+  :ensure t
+  :config
+  (add-to-list 'tree-edit-language-alist '(c++-mode . tree-edit-c++))
+  
+  (add-hook 'python-mode-hook #'evil-tree-edit-mode)
+  (add-hook 'c-mode-hook #'evil-tree-edit-mode)
+  (add-hook 'c++-mode-hook #'evil-tree-edit-mode)
+  (add-hook 'java-mode-hook #'evil-tree-edit-mode)
+
+  ;; (add-hook 'evil-tree-edit-after-change-hook #'lsp-format-buffer)
+  (add-hook 'evil-tree-edit-mode #'evil-tree-edit-view-mode))
 
 ;; (require 'fcitx)
 ;; (fcitx-aggressive-setup)
@@ -531,6 +597,18 @@
   (add-hook 'eww-after-render-hook #'my-eww-readable-nonce)
   (eww (concat "namu.wiki/Search?q=" (read-string "Enter query: "))))
 
+(defun comp-and-run ()
+  (interactive)
+  (let
+      ((ccmd (projectile-compilation-command
+              (projectile-compilation-dir)))
+       (rcmd (projectile-run-command
+              (projectile-compilation-dir))))
+    (if (and ccmd rcmd)
+        (compile
+         (format "%s && %s" ccmd rcmd) t)
+      (compile (concat ccmd rcmd) t))))
+
 
 ;; Keybinds
 (global-set-key (kbd "C-c C-c")
@@ -546,6 +624,9 @@
 (global-set-key (kbd "S-SPC")
 				nil)
 
+(global-unset-key (kbd "M-j"))
+(global-unset-key (kbd "M-k"))
+
 (global-set-key (kbd "M-h")
                 (lambda ()
 				  (interactive)
@@ -559,6 +640,23 @@
 				  (interactive)
 				  (tmux-navigate "up")))
 (global-set-key (kbd "M-j")
+				(lambda ()
+				  (interactive)
+				  (tmux-navigate "down")))
+
+(global-set-key (kbd "H-h")
+                (lambda ()
+				  (interactive)
+				  (tmux-navigate "left")))
+(global-set-key (kbd "H-l")
+                (lambda ()
+				  (interactive)
+				  (tmux-navigate "right")))
+(global-set-key (kbd "H-k")
+                (lambda ()
+				  (interactive)
+				  (tmux-navigate "up")))
+(global-set-key (kbd "H-j")
 				(lambda ()
 				  (interactive)
 				  (tmux-navigate "down")))
@@ -586,17 +684,8 @@
 ;; (global-set-key (kbd "<f5>") (lambda () (interactive)
 ;; 								(projectile-compile-project nil)
 ;; 								(projectile-run-project nil)))
-(global-set-key (kbd "<f5>") (lambda ()
-							   (interactive)
-							   (let
-								   ((ccmd (projectile-compilation-command
-										   (projectile-compilation-dir)))
-									(rcmd (projectile-run-command
-										   (projectile-compilation-dir))))
-								 (if (and ccmd rcmd)
-									 (compile
-									  (format "%s && %s" ccmd rcmd) t)
-								   (compile (concat ccmd rcmd) t)))))
+(global-set-key (kbd "<f5>") #'comp-and-run)
+(global-set-key (kbd "H-r") #'comp-and-run)
 
 (global-set-key (kbd "<f6>") 'projectile-compile-project)
 (global-set-key (kbd "<f7>") 'projectile-run-project)
