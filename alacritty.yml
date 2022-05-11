@@ -55,7 +55,7 @@ window:
 
 font:
   normal:
-    family: "FiraCode Nerd Font"
+    family: "Fira Code"
     # family: "Meslo LGS NF"
   size: 12
 

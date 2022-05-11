@@ -82,7 +82,7 @@
 	(progn
 	  (load-theme 'nord t)
 	  (set-face-attribute 'default nil
-						  :font "FiraCode Nerd Font"
+						  :font "Fira Code"
 						  :height 130)
 	  (set-fontset-font t
 						'hangul
