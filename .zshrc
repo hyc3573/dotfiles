@@ -4,7 +4,7 @@ pfetch
 
 alias ls='ls --color=tty'
 
-source ~/Git/znap/zsh-snap/znap.zsh
+source ~/Git/zsh-snap/znap.zsh
 
 #znap source marlonrichert/zsh-autocomplete
 source ~/Git/zsh-autocomplete/zsh-autocomplete.plugin.zsh

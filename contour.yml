@@ -163,7 +163,7 @@ profiles:
 
         # Environment variables to be passed to the shell.
         environment:
-            TERM: xterm-24bit
+            TERM: contour
             COLORTERM: truecolor
 
         # Determines the terminal type that is being advertised.
@@ -216,7 +216,7 @@ profiles:
         # Font related configuration (font face, styles, size, rendering mode).
         font:
             # Initial font size in pixels.
-            size: 12
+            size: 16
 
             # DPI scaling factor applied on top of the system configured on (default: 1.0).
             dpi_scale: 1.0
