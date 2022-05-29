@@ -350,6 +350,7 @@
 		which-key-idle-delay 0.1
 		which-key-idle-secondary-delay 0.05)
   (which-key-setup-side-window-bottom)
+  (global-set-key (kbd "C-h g") 'which-key-show-major-mode)
   (which-key-mode))
 
 (use-package evil-org
