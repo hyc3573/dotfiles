@@ -323,7 +323,7 @@
 		org-startup-with-inline-images t
         org-startup-truncated nil
 		org-log-dont t
-		org-agenda-files '("~/Documents/notes.org" "~/Documents/tasks.org")
+		org-agenda-files '("~/Documents/Agenda/scedules.org")
 		org-startup-indented t
 		org-tag-alist '(("@학교" . ?s)
 						("@집" . ?f)
@@ -379,7 +379,13 @@
 		dashboard-set-init-info t
 		dashboard-set-footer nil
 		initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  (add-hook 'dashboard-mode-hook #'variable-pitch-mode))
+  (add-hook 'dashboard-mode-hook #'variable-pitch-mode)
+  (add-hook 'python-mode-hook #'(lambda () (interactive)
+                                  (unless (stringp projectile-project-run-cmd)
+                                    (setq-local projectile-project-run-cmd (concat "python " (buffer-file-name))))))
+  (add-hook 'haskell-mode-hook #'(lambda () (interactive)
+                                   (unless (stringp projectile-project-run-cmd)
+                                     (setq-local projectile-project-run-cmd (concat "runghc " (buffer-file-name)))))))
 
 (use-package all-the-icons
   :ensure t)
@@ -536,15 +542,17 @@
 (use-package tree-edit
   :ensure t
   :config
-  (add-to-list 'tree-edit-language-alist '(c++-mode . tree-edit-c++))
-  
   (add-hook 'python-mode-hook #'evil-tree-edit-mode)
   (add-hook 'c-mode-hook #'evil-tree-edit-mode)
-  (add-hook 'c++-mode-hook #'evil-tree-edit-mode)
   (add-hook 'java-mode-hook #'evil-tree-edit-mode)
 
   ;; (add-hook 'evil-tree-edit-after-change-hook #'lsp-format-buffer)
   (add-hook 'evil-tree-edit-mode #'evil-tree-edit-view-mode))
+
+(use-package edit-server
+  :ensure t
+  :config
+  (edit-server-start))
 
 ;; (require 'fcitx)
 ;; (fcitx-aggressive-setup)
