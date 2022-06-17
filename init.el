@@ -61,7 +61,24 @@
  '(indent-tabs-mode nil)
  '(menu-bar-mode nil)
  '(nord-uniform-mode-lines t)
+ '(org-agenda-custom-commands
+   '(("c" "Weekly/Daily"
+      ((agenda ""
+               ((org-agenda-span 1)
+                (org-agenda-start-on-weekday 0)))
+       (agenda "" nil)
+       (tags-todo "@IMPORTANT" nil)
+       (alltodo "" nil))
+      nil)
+     ("g" "General"
+      ((alltodo "" nil)
+       (agenda ""
+               ((org-agenda-span 'day)))
+       (agenda ""
+               ((org-agenda-span 'month))))
+      nil nil)))
  '(org-export-backends '(ascii html icalendar latex md odt))
+ '(org-todo-keywords '((sequence "TODO" "DONE" "CANCELED" "INCOMING" "SCEDULE")))
  '(package-selected-packages
    '(cask package-build evil-tree-edit tree-edit puni command-log-mode helpful tree-sitter-langs evil-textobj-tree-sitter evil-text-object-python evil-cleverparens general evil-smartparens buffer-flip company-coq proof-general zoom speed-type xclip monkeytype iflipb frog-jump-buffer bug-hunter evil-args org emmet-mode rainbow-mode flycheck-clang-tidy rustic pyvenv yaml-mode company-posframe doom-themes telephone-line simple-mpc hotfuzz selectrum-prescient selectrum fira-code-mode chess vimish-fold gdscript-mode suggest symon selectric-mode vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip flycheck poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org all-the-icons evil-collection nord-theme which-key treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens taskrunner async-await helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
@@ -118,6 +135,7 @@
                                              ((org-agenda-span 1)
                                               (org-agenda-start-on-weekday 0)))
                                      (agenda "")
+                                     (tags-todo "@important")
                                      (alltodo ""))))
 	  vc-follow-symlinks nil
 	  frame-resize-pixelwise t
@@ -182,6 +200,7 @@
   :config
   (add-hook 'evil-local-mode-hook #'turn-on-undo-tree-mode)
   (evil-set-initial-state 'simple-mpc-mode 'emacs)
+  (evil-set-initial-state 'org-agenda-mode 'normal)
   (evil-set-initial-state 'comint-mode 'normal)
   (evil-set-initial-state 'speed-type 'normal)
   (evil-mode 1))
@@ -325,11 +344,7 @@
 		org-log-dont t
 		org-agenda-files '("~/Documents/Agenda/scedules.org")
 		org-startup-indented t
-		org-tag-alist '(("@학교" . ?s)
-						("@집" . ?f)
-						("@취미" . ?h)
-						("@컴퓨터" . ?c)
-						("@루틴" . ?r))
+		org-tag-alist '(("@important" . ?i))
 		org-hide-emphasis-markers t
 		org-fontify-done-headline t
 		org-hide-emphasis-markers t
@@ -342,6 +357,26 @@
 	 (emacs-lisp . t)
 	 (calc . t)
 	 (haskell . t))))
+
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/Documents/Roam")
+  (org-roam-completion-everywhere t)
+  (org-roam-capture-templates
+   '(("d" "default" plain
+      "%?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i" . completion-at-point))
+  :config
+  (org-roam-setup))
 
 (use-package which-key
   :ensure t
@@ -471,7 +506,7 @@
   :ensure t
   :config
   (general-evil-setup)
-  (general-nvmap :prefix "C-c"
+  (general-nvmap :prefix "SPC"
          :keymaps 'smartparens-mode-map
          ">" '(sp-backward-barf-sexp :wk "Barf backward" :properties '(:repeat))
          "<" '(sp-forward-barf-sexp :wk "Barf forward" :properties '(:repeat))
@@ -489,7 +524,10 @@
          "t" '(sp-transpose-sexp :wk "Transpose")
          "T" '(sp-transpose-hybrid-sexp :wk "Transpose (hybrid)")
          ;; Narrow and Widen, use default emacs for widening
-         "n" '(sp-narrow-to-sexp :wk "Narrow")))
+         "n" '(sp-narrow-to-sexp :wk "Narrow"))
+  (general-nvmap :prefix "SPC"
+    :keymaps 'global-map
+    "a" '(org-agenda :wk "Org-Agenda")))
 
 (use-package tree-sitter
   :ensure t
@@ -636,22 +674,22 @@
 (global-unset-key (kbd "M-j"))
 (global-unset-key (kbd "M-k"))
 
-(global-set-key (kbd "M-h")
-                (lambda ()
-				  (interactive)
-				  (tmux-navigate "left")))
-(global-set-key (kbd "M-l")
-                (lambda ()
-				  (interactive)
-				  (tmux-navigate "right")))
-(global-set-key (kbd "M-k")
-                (lambda ()
-				  (interactive)
-				  (tmux-navigate "up")))
-(global-set-key (kbd "M-j")
-				(lambda ()
-				  (interactive)
-				  (tmux-navigate "down")))
+;; (global-set-key (kbd "M-h")
+;;                 (lambda ()
+;; 				  (interactive)
+;; 				  (tmux-navigate "left")))
+;; (global-set-key (kbd "M-l")
+;;                 (lambda ()
+;; 				  (interactive)
+;; 				  (tmux-navigate "right")))
+;; (global-set-key (kbd "M-k")
+;;                 (lambda ()
+;; 				  (interactive)
+;; 				  (tmux-navigate "up")))
+;; (global-set-key (kbd "M-j")
+;; 				(lambda ()
+;; 				  (interactive)
+;; 				  (tmux-navigate "down")))
 
 (global-set-key (kbd "H-h")
                 (lambda ()
