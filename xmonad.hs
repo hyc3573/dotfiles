@@ -82,7 +82,7 @@ myLayout = lessBorders Never $ minimize $ BW.boringWindows $ tall ||| grid ||| f
 
 myStartupHook = do
   spawn "picom -bc > /tmp/picom.log 2>&1"
-  spawn "setxkbmap -option caps:escape"
+  spawn "xcape -t 300 -e \"Control_L=Escape\""
   modify $ \xstate -> xstate { windowset = onlyOnScreen 1 "1_1" (windowset xstate) }
 
 myKeys :: XConfig l -> Map (KeyMask, KeySym) (X ())
