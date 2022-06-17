@@ -100,7 +100,7 @@
 	  (load-theme 'nord t)
 	  (set-face-attribute 'default nil
 						  :font "Fira Code"
-						  :height 130)
+						  :height 160)
 	  (set-fontset-font t
 						'hangul
 						(font-spec :name "NanumGothicCoding")))))
