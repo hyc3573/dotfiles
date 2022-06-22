@@ -56,6 +56,7 @@
  '(evil-cleverparens-use-additional-movement-keys nil)
  '(flycheck-cppcheck-checks '("all"))
  '(flycheck-cppcheck-inconclusive t)
+ '(gdb-many-windows t)
  '(helm-minibuffer-history-key "M-p")
  '(highlight-indent-guides-method 'fill)
  '(indent-tabs-mode nil)
@@ -76,9 +77,13 @@
                ((org-agenda-span 'day)))
        (agenda ""
                ((org-agenda-span 'month))))
-      nil nil)))
+      nil nil)) t)
  '(org-export-backends '(ascii html icalendar latex md odt))
- '(org-todo-keywords '((sequence "TODO" "DONE" "CANCELED" "INCOMING" "SCEDULE")))
+ '(org-todo-keywords
+   '((sequence "TODO" "|" "DONE")
+     (sequence "INCOMING" "NOW" "|" "PAST")
+     (sequence "SCEDULE" "|" "DONE")
+     (sequence "|" "CANCELED")))
  '(package-selected-packages
    '(cask package-build evil-tree-edit tree-edit puni command-log-mode helpful tree-sitter-langs evil-textobj-tree-sitter evil-text-object-python evil-cleverparens general evil-smartparens buffer-flip company-coq proof-general zoom speed-type xclip monkeytype iflipb frog-jump-buffer bug-hunter evil-args org emmet-mode rainbow-mode flycheck-clang-tidy rustic pyvenv yaml-mode company-posframe doom-themes telephone-line simple-mpc hotfuzz selectrum-prescient selectrum fira-code-mode chess vimish-fold gdscript-mode suggest symon selectric-mode vertico cmake-mode projectile-mode evil-org-agenda org-roam-ui dyalog-mode glsl-mode srefactor elisp-format flycheck-popup-tip flycheck poly-org arduino-mode org-bullets centaur-tabs lsp fish-mode org-roam vterm esup dashboard lsp-haskell haskell-mode highlight-parentheses evil-org all-the-icons evil-collection nord-theme which-key treemacs-projectile treemacs-evil makefile-executor helm-make ivy ## smartparens taskrunner async-await helm-lsp lsp-treemacs lsp-ui posframe company-quickhelp company lsp-mode projectile undo-tree evil use-package))
  '(posframe-mouse-banish nil t)
@@ -90,7 +95,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(frog-menu-posframe-background-face ((t (:background "#4C566A")))))
 
 
 ;; theme
@@ -527,7 +532,7 @@
          "n" '(sp-narrow-to-sexp :wk "Narrow"))
   (general-nvmap :prefix "SPC"
     :keymaps 'global-map
-    "a" '(org-agenda :wk "Org-Agenda")))
+    "A" '(org-agenda :wk "Org-Agenda")))
 
 (use-package tree-sitter
   :ensure t
