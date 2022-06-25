@@ -511,7 +511,7 @@
   :ensure t
   :config
   (general-evil-setup)
-  (general-nvmap :prefix "SPC"
+  (general-nmap :prefix "SPC"
          :keymaps 'smartparens-mode-map
          ">" '(sp-backward-barf-sexp :wk "Barf backward" :properties '(:repeat))
          "<" '(sp-forward-barf-sexp :wk "Barf forward" :properties '(:repeat))
@@ -530,9 +530,17 @@
          "T" '(sp-transpose-hybrid-sexp :wk "Transpose (hybrid)")
          ;; Narrow and Widen, use default emacs for widening
          "n" '(sp-narrow-to-sexp :wk "Narrow"))
-  (general-nvmap :prefix "SPC"
+  (general-nmap :prefix "SPC"
     :keymaps 'global-map
-    "A" '(org-agenda :wk "Org-Agenda")))
+    "A" '(org-agenda :wk "Org-Agenda"))
+  (general-vmap :prefix "SPC"
+    :keymaps 'smartparens-strict-mode-map
+    "(" '(sp-wrap-round :wk "Wrap with ()")
+    ")" '(sp-wrap-round :wk "Wrap with ()")
+    "[" '(sp-wrap-square :wk "Wrap with []")
+    "]" '(sp-wrap-square :wk "Wrap with []")
+    "{" '(sp-wrap-curly :wk "Wrap with {}")
+    "}" '(sp-wrap-curly :wk "Wrap with {}")))
 
 (use-package tree-sitter
   :ensure t
