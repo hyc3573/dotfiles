@@ -205,9 +205,11 @@
   :config
   (add-hook 'evil-local-mode-hook #'turn-on-undo-tree-mode)
   (evil-set-initial-state 'simple-mpc-mode 'emacs)
+  (evil-set-initial-state 'tetris-mode 'emacs)
   (evil-set-initial-state 'org-agenda-mode 'normal)
   (evil-set-initial-state 'comint-mode 'normal)
-  (evil-set-initial-state 'speed-type 'normal)
+  (evil-set-initial-state 'speed-type 'insert)
+  (add-hook 'tetris-mode-hook #'evil-emacs-state)
   (evil-mode 1))
   ;; (add-hook 'evil-insert-state-exit-hook #'(lambda () (interactive) (call-process "ibus" nil nil nil "engine xkb:us::eng")))
 
@@ -217,7 +219,9 @@
   :after evil
   :custom 
   (evil-collection-setup-minibuffer t)
-  :init (evil-collection-init))
+  :init (evil-collection-init)
+  :config
+  (delq 'tetris evil-collection-mode-list))
 
 (use-package lsp-mode
   :ensure t
@@ -577,7 +581,6 @@
   (define-key evil-normal-state-map (kbd "[F") (lambda ()
                                                  (interactive)
                                                  (evil-textobj-tree-sitter-goto-textobj "function.outer" t t)))
-  
   (global-tree-sitter-mode))
 
 (use-package helpful
@@ -589,6 +592,30 @@
   (global-set-key (kbd "C-c C-d") #'helpful-at-point)
   (global-set-key (kbd "C-h F") #'helpful-function)
   (global-set-key (kbd "C-h C") #'helpful-command))
+
+(use-package evil-easymotion
+  :ensure t
+  :config
+  (general-define-key
+   :keymaps 'global-map
+   :prefix "H-SPC"
+   "w" #'evilem-motion-forward-word-begin :wk "word start ->"
+   "W" #'evilem-motion-forward-WORD-begin :wk "WORD start ->"
+   "e" #'evilem-motion-forward-word-end   :wk "word end ->"
+   "E" #'evilem-motion-forward-WORD-end   :wk "WORD end ->"
+
+   "b" #'evilem-motion-backword-word-begin :wk "word start <-"
+   "B" #'evilem-motion-backword-WORD-begin :wk "WORD start <-"
+   "ge" #'evilem-motion-backword-word-end  :wk "word end <-"
+   "gE" #'evilem-motion-backword-WORD-end  :wk "WORD end <-"
+
+   "j" #'evilem-motion-next-line           :wk "line ->"
+   "k" #'evilem-motion-previous-line       :wk "line <-"
+   "gj" #'evilem-motion-next-visual-line   :wk "g line ->"
+   "gk" #'evilem-motion-previous-visual-line :wk "g line <-"
+
+   "f" #'evilem-motion-find-char             :wk "find char ->"
+   "F" #'evilem-motion-find-char-backward    :wk "find char <-"))
 
 (use-package tree-edit
   :ensure t
