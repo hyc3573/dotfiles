@@ -180,7 +180,9 @@
 (add-hook 'org-mode-hook #'prettify-symbols-mode)
 ;; (add-hook 'after-init-hook #'doom-modeline-mode)
 (add-hook 'prog-mode-hook #'show-smartparens-mode)
+(add-hook 'sage-shell-mode-hook #'show-smartparens-mode)
 (add-hook 'prog-mode-hook #'hs-minor-mode)
+(add-hook 'sage-shell-mode #'hs-minor-mode)
 (add-hook 'emacs-lisp-mode-hook #'semantic-mode)
 (add-hook 'emacs-lisp-mode-hook #'hs-minor-mode)
 (add-hook 'text-mode-hook #'(lambda () (setq indent-tabs-mode nil)))
@@ -282,6 +284,7 @@
   (company-tng-configure-default)
   :hook
   (emacs-lisp-mode . company-mode)
+  (sage-shell-mode . company-mode)
   (cmake-mode . company-mode)
   (coq-mode . company-coq-mode)
   :bind
@@ -294,17 +297,27 @@
   :defer t
   :config
   (add-hook 'prog-mode-hook #'smartparens-strict-mode)
+  (add-hook 'sage-shell-mode-hook #'smartparens-strict-mode)
   (setq sp-python-insert-colon-in-function-definitions nil)
   (sp-local-pair 'prog-mode "{" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'prog-mode "[" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'prog-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'prog-mode "\"" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'prog-mode "'" nil :post-handlers '(("||\n[i]" "RET")))
+
+  (sp-local-pair 'sage-shell-mode "{" nil :post-handlers '(("||\n[i]" "RET")))
+  (sp-local-pair 'sage-shell-mode "[" nil :post-handlers '(("||\n[i]" "RET")))
+  (sp-local-pair 'sage-shell-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
+  (sp-local-pair 'sage-shell-mode "\"" nil :post-handlers '(("||\n[i]" "RET")))
+  (sp-local-pair 'sage-shell-mode "'" nil :post-handlers '(("||\n[i]" "RET")))
+
   (add-hook 'smartparens-enabled-hook #'evil-cleverparens-mode)
   (require 'smartparens-config))
 
 (use-package sage-shell-mode
-  :ensure t)
+  :ensure t
+  :config
+  (unbind-key "TAB" 'sage-shell-mode-map))
 
 (use-package proof-general
   :config
