@@ -180,7 +180,9 @@
 (add-hook 'org-mode-hook #'prettify-symbols-mode)
 ;; (add-hook 'after-init-hook #'doom-modeline-mode)
 (add-hook 'prog-mode-hook #'show-smartparens-mode)
+(add-hook 'prog-mode-hook #'hs-minor-mode)
 (add-hook 'emacs-lisp-mode-hook #'semantic-mode)
+(add-hook 'emacs-lisp-mode-hook #'hs-minor-mode)
 (add-hook 'text-mode-hook #'(lambda () (setq indent-tabs-mode nil)))
 
 
@@ -299,8 +301,10 @@
   (sp-local-pair 'prog-mode "\"" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'prog-mode "'" nil :post-handlers '(("||\n[i]" "RET")))
   (add-hook 'smartparens-enabled-hook #'evil-cleverparens-mode)
-  (require 'smartparens-config)
-)
+  (require 'smartparens-config))
+
+(use-package sage-shell-mode
+  :ensure t)
 
 (use-package proof-general
   :config
@@ -392,7 +396,9 @@
   :config
   (setq which-key-show-early-on-C-h t
 		which-key-idle-delay 0.1
-		which-key-idle-secondary-delay 0.05)
+		which-key-idle-secondary-delay 0.05
+        which-key-popup-type 'side-window
+        which-key-side-window-max-height 0.25)
   (which-key-setup-side-window-bottom)
   (global-set-key (kbd "C-h g") 'which-key-show-major-mode)
   (which-key-mode))
@@ -515,28 +521,65 @@
   :ensure t
   :config
   (general-evil-setup)
+
+  (general-define-key
+   :keymaps 'global-map
+   :prefix "H-SPC"
+   "w" #'(evilem-motion-forward-word-begin :wk "word start ->")
+   "W" #'(evilem-motion-forward-WORD-begin :wk "WORD start ->")
+   "e" #'(evilem-motion-forward-word-end   :wk "word end ->")
+   "E" #'(evilem-motion-forward-WORD-end   :wk "WORD end ->")
+
+   "b" #'(evilem-motion-backword-word-begin :wk "word start <-")
+   "B" #'(evilem-motion-backword-WORD-begin :wk "WORD start <-")
+   "ge" #'(evilem-motion-backword-word-end  :wk "word end <-")
+   "gE" #'(evilem-motion-backword-WORD-end  :wk "WORD end <-")
+
+   "j" #'(evilem-motion-next-line           :wk "line ->")
+   "k" #'(evilem-motion-previous-line       :wk "line <-")
+   "gj" #'(evilem-motion-next-visual-line   :wk "g line ->")
+   "gk" #'(evilem-motion-previous-visual-line :wk "g line <-")
+
+   "f" #'(evilem-motion-find-char             :wk "find char ->")
+   "F" #'(evilem-motion-find-char-backward    :wk "find char <-")
+
+   "c" #'(comment-or-uncomment-region :wk "toggle comment"))
+
   (general-nmap :prefix "SPC"
-         :keymaps 'smartparens-mode-map
-         ">" '(sp-backward-barf-sexp :wk "Barf backward" :properties '(:repeat))
-         "<" '(sp-forward-barf-sexp :wk "Barf forward" :properties '(:repeat))
-         "(" '(sp-backward-slurp-sexp :wk "Slurp backward" :properties '(:repeat))
-         ")" '(sp-forward-slurp-sexp :wk "Slurp forward" :properties '(:repeat))
-         "}" '(sp-slurp-hybrid-sexp :wk "Slurp (hybrid)" :properties '(:repeat))
-         "+" '(sp-join-sexp :wk "Join")
-         "-" '(sp-split-sexp :wk "Split")
-         "a" '(sp-absorb-sexp :wk "Absorb")
-         "c" '(sp-clone-sexp :wk "Clone")
-         "C" '(sp-convolute-sexp :wk "Convolute")
-         "m" '(sp-mark-sexp :wk "Mark")
-         "r" '(sp-raise-sexp :wk "Raise")
-         "s" '(sp-splice-sexp-killing-around :wk "Splice")
-         "t" '(sp-transpose-sexp :wk "Transpose")
-         "T" '(sp-transpose-hybrid-sexp :wk "Transpose (hybrid)")
-         ;; Narrow and Widen, use default emacs for widening
-         "n" '(sp-narrow-to-sexp :wk "Narrow"))
+    :keymaps 'smartparens-mode-map
+    ">" '(sp-backward-barf-sexp :wk "Barf backward" :properties '(:repeat))
+    "<" '(sp-forward-barf-sexp :wk "Barf forward" :properties '(:repeat))
+    "(" '(sp-backward-slurp-sexp :wk "Slurp backward" :properties '(:repeat))
+    ")" '(sp-forward-slurp-sexp :wk "Slurp forward" :properties '(:repeat))
+    "}" '(sp-slurp-hybrid-sexp :wk "Slurp (hybrid)" :properties '(:repeat))
+    "+" '(sp-join-sexp :wk "Join")
+    "-" '(sp-split-sexp :wk "Split")
+    "a" '(sp-absorb-sexp :wk "Absorb")
+    "c" '(sp-clone-sexp :wk "Clone")
+    "C" '(sp-convolute-sexp :wk "Convolute")
+    "m" '(sp-mark-sexp :wk "Mark")
+    "r" '(sp-raise-sexp :wk "Raise")
+    "s" '(sp-splice-sexp-killing-around :wk "Splice")
+    "t" '(sp-transpose-sexp :wk "Transpose")
+    "T" '(sp-transpose-hybrid-sexp :wk "Transpose (hybrid)")
+    ;; Narrow and Widen, use default emacs for widening
+    "n" '(sp-narrow-to-sexp :wk "Narrow")
+
+    "f" '(hs-toggle-hiding :wk "toggle fold")
+    "u" '(hs-show-all      :wk "unfold all")
+    "h" '(hs-hide-all      :wk "fold all"))
+
   (general-nmap :prefix "SPC"
     :keymaps 'global-map
-    "A" '(org-agenda :wk "Org-Agenda"))
+    "A" '(org-agenda :wk "Org-Agenda")
+    "R" #'(comp-and-run :wk "compile and run")
+    "j" #'(frog-jump-buffer :wk "jump buf")
+    "<tab>" #'(iflipb-next-buffer :wk "M-<tab>"))
+
+  (general-nvmap :prefix "SPC"
+    :keymaps 'lsp-mode-map
+    "l" (general-simulate-key "C-c l"))
+
   (general-vmap :prefix "SPC"
     :keymaps 'smartparens-strict-mode-map
     "(" '(sp-wrap-round :wk "Wrap with ()")
@@ -596,26 +639,8 @@
 (use-package evil-easymotion
   :ensure t
   :config
-  (general-define-key
-   :keymaps 'global-map
-   :prefix "H-SPC"
-   "w" #'evilem-motion-forward-word-begin :wk "word start ->"
-   "W" #'evilem-motion-forward-WORD-begin :wk "WORD start ->"
-   "e" #'evilem-motion-forward-word-end   :wk "word end ->"
-   "E" #'evilem-motion-forward-WORD-end   :wk "WORD end ->"
-
-   "b" #'evilem-motion-backword-word-begin :wk "word start <-"
-   "B" #'evilem-motion-backword-WORD-begin :wk "WORD start <-"
-   "ge" #'evilem-motion-backword-word-end  :wk "word end <-"
-   "gE" #'evilem-motion-backword-WORD-end  :wk "WORD end <-"
-
-   "j" #'evilem-motion-next-line           :wk "line ->"
-   "k" #'evilem-motion-previous-line       :wk "line <-"
-   "gj" #'evilem-motion-next-visual-line   :wk "g line ->"
-   "gk" #'evilem-motion-previous-visual-line :wk "g line <-"
-
-   "f" #'evilem-motion-find-char             :wk "find char ->"
-   "F" #'evilem-motion-find-char-backward    :wk "find char <-"))
+  
+  )
 
 (use-package tree-edit
   :ensure t
@@ -698,6 +723,7 @@
 
 
 ;; Keybinds
+
 (global-set-key (kbd "C-c C-c")
                 'comment-or-uncomment-region)
 
@@ -710,9 +736,6 @@
                 'toggle-input-method)
 (global-set-key (kbd "S-SPC")
 				nil)
-
-(global-unset-key (kbd "M-j"))
-(global-unset-key (kbd "M-k"))
 
 ;; (global-set-key (kbd "M-h")
 ;;                 (lambda ()
