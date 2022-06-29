@@ -170,6 +170,7 @@
 (show-paren-mode 0)
 (global-hl-line-mode +1)
 (xterm-mouse-mode)
+(pixel-scroll-precision-mode)
 (recentf-mode 1)
 (global-display-line-numbers-mode)
 
@@ -530,6 +531,77 @@
         '("^\\*helm\\b"
           "^\\*swiper\\*$")))
 
+
+(use-package tree-sitter
+  :ensure t
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs
+  :ensure t)
+
+(use-package evil-textobj-tree-sitter
+  :ensure t
+  :config
+  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+  (define-key evil-inner-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
+  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
+  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
+  (define-key evil-outer-text-objects-map "b" (evil-textobj-tree-sitter-get-textobj "block.outer"))
+  (define-key evil-inner-text-objects-map "b" (evil-textobj-tree-sitter-get-textobj "block.inner"))
+
+  ;; Goto start of next function
+  (define-key evil-normal-state-map (kbd "]f") (lambda ()
+                                                 (interactive)
+                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer")))
+  ;; Goto start of previous function
+  (define-key evil-normal-state-map (kbd "[f") (lambda ()
+                                                 (interactive)
+                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
+  ;; Goto end of next function
+  (define-key evil-normal-state-map (kbd "]F") (lambda ()
+                                                 (interactive)
+                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
+  ;; Goto end of previous function
+  (define-key evil-normal-state-map (kbd "[F") (lambda ()
+                                                 (interactive)
+                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer" t t)))
+  (global-tree-sitter-mode))
+
+(use-package helpful
+  :ensure t
+  :config
+  (global-set-key (kbd "C-h f") #'helpful-callable)
+  (global-set-key (kbd "C-h v") #'helpful-variable)
+  (global-set-key (kbd "C-h k") #'helpful-key)
+  (global-set-key (kbd "C-c C-d") #'helpful-at-point)
+  (global-set-key (kbd "C-h F") #'helpful-function)
+  (global-set-key (kbd "C-h C") #'helpful-command))
+
+(use-package evil-easymotion
+  :ensure t
+  :config
+  (evilem-make-motion-plain symbforwardbeg 'evil-cp-forward-symbol-begin)
+  (evilem-make-motion-plain symbforwardend 'evil-cp-forward-symbol-end)
+  (evilem-make-motion-plain symbbackwardbeg 'evil-cp-backward-symbol-begin)
+  (evilem-make-motion-plain symbbackwardend 'evil-cp-backward-symbol-end))
+
+(use-package tree-edit
+  :ensure t
+  :config
+  (add-hook 'python-mode-hook #'evil-tree-edit-mode)
+  (add-hook 'c-mode-hook #'evil-tree-edit-mode)
+  (add-hook 'java-mode-hook #'evil-tree-edit-mode)
+
+  ;; (add-hook 'evil-tree-edit-after-change-hook #'lsp-format-buffer)
+  (add-hook 'evil-tree-edit-mode #'evil-tree-edit-view-mode))
+
+(use-package edit-server
+  :ensure t
+  :config
+  (edit-server-start))
+
 (use-package general
   :ensure t
   :config
@@ -542,6 +614,11 @@
    "W" #'(evilem-motion-forward-WORD-begin :wk "WORD start ->")
    "e" #'(evilem-motion-forward-word-end   :wk "word end ->")
    "E" #'(evilem-motion-forward-WORD-end   :wk "WORD end ->")
+
+   "s" #'(symbforwardbeg :wk "symbol start ->")
+   "gs" #'(symbforwardend :wk "symbol end ->")
+   "d" #'(symbbackwardbeg :wk "symbol start <-")
+   "d" #'(symbbackwardend :wk "symbol end <-")
 
    "b" #'(evilem-motion-backword-word-begin :wk "word start <-")
    "B" #'(evilem-motion-backword-WORD-begin :wk "WORD start <-")
@@ -601,74 +678,6 @@
     "]" '(sp-wrap-square :wk "Wrap with []")
     "{" '(sp-wrap-curly :wk "Wrap with {}")
     "}" '(sp-wrap-curly :wk "Wrap with {}")))
-
-(use-package tree-sitter
-  :ensure t
-  :config
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
-(use-package tree-sitter-langs
-  :ensure t)
-
-(use-package evil-textobj-tree-sitter
-  :ensure t
-  :config
-  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
-  (define-key evil-inner-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
-  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
-  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
-  (define-key evil-outer-text-objects-map "b" (evil-textobj-tree-sitter-get-textobj "block.outer"))
-  (define-key evil-inner-text-objects-map "b" (evil-textobj-tree-sitter-get-textobj "block.inner"))
-
-  ;; Goto start of next function
-  (define-key evil-normal-state-map (kbd "]f") (lambda ()
-                                                 (interactive)
-                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer")))
-  ;; Goto start of previous function
-  (define-key evil-normal-state-map (kbd "[f") (lambda ()
-                                                 (interactive)
-                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
-  ;; Goto end of next function
-  (define-key evil-normal-state-map (kbd "]F") (lambda ()
-                                                 (interactive)
-                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
-  ;; Goto end of previous function
-  (define-key evil-normal-state-map (kbd "[F") (lambda ()
-                                                 (interactive)
-                                                 (evil-textobj-tree-sitter-goto-textobj "function.outer" t t)))
-  (global-tree-sitter-mode))
-
-(use-package helpful
-  :ensure t
-  :config
-  (global-set-key (kbd "C-h f") #'helpful-callable)
-  (global-set-key (kbd "C-h v") #'helpful-variable)
-  (global-set-key (kbd "C-h k") #'helpful-key)
-  (global-set-key (kbd "C-c C-d") #'helpful-at-point)
-  (global-set-key (kbd "C-h F") #'helpful-function)
-  (global-set-key (kbd "C-h C") #'helpful-command))
-
-(use-package evil-easymotion
-  :ensure t
-  :config
-  
-  )
-
-(use-package tree-edit
-  :ensure t
-  :config
-  (add-hook 'python-mode-hook #'evil-tree-edit-mode)
-  (add-hook 'c-mode-hook #'evil-tree-edit-mode)
-  (add-hook 'java-mode-hook #'evil-tree-edit-mode)
-
-  ;; (add-hook 'evil-tree-edit-after-change-hook #'lsp-format-buffer)
-  (add-hook 'evil-tree-edit-mode #'evil-tree-edit-view-mode))
-
-(use-package edit-server
-  :ensure t
-  :config
-  (edit-server-start))
 
 ;; (require 'fcitx)
 ;; (fcitx-aggressive-setup)
